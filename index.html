@@ -1,221 +1,177 @@
-<!DOCTYPE html><html lang="tr">
+<!DOCTYPE html>
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manager RP</title><style>
+<title>MANAGER RP</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+<style>
 body{
   margin:0;
-  font-family:Arial;
-  background:#0b0b0f;
+  font-family:Barlow;
+  background:#0f0f0f;
   color:white;
 }
 
-header{
-  background:#e10600;
-  padding:25px;
-  text-align:center;
-  position:relative;
+/* TOP BAR */
+#topbar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:50px;
+  background:#111;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 10px;
+  z-index:1000;
 }
 
-header h1{margin:0;}
-
-.menu{
-  position:absolute;
-  left:15px;
-  top:15px;
+#menuBtn{
   font-size:28px;
   cursor:pointer;
 }
 
-.admin{
-  position:absolute;
-  right:15px;
-  top:15px;
-  background:black;
+#adminBtn{
+  background:red;
   padding:6px 10px;
-  border-radius:6px;
+  border-radius:5px;
   cursor:pointer;
+  font-weight:bold;
 }
 
-.sidebar{
+/* MENU */
+#menu{
   position:fixed;
-  left:-240px;
-  top:0;
-  width:220px;
-  height:100%;
-  background:#111;
-  padding:20px;
-  transition:0.3s;
-}
-
-.sidebar a{
-  display:block;
-  color:white;
-  text-decoration:none;
-  margin:15px 0;
-}
-
-.sidebar.active{left:0;}
-
-.section{
-  max-width:900px;
-  margin:40px auto;
-  padding:10px;
-}
-
-.card{
-  background:#1a1a25;
-  padding:10px;
-  margin:5px 0;
-  border-radius:8px;
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  width:100%;
-  height:100%;
-  top:0;
+  top:50px;
   left:0;
-  background:rgba(0,0,0,0.7);
-  justify-content:center;
-  align-items:center;
+  width:200px;
+  background:#222;
+  display:none;
+  flex-direction:column;
+  z-index:999;
 }
 
-.box{
-  background:#111;
-  padding:20px;
-  border-radius:10px;
-}
-
-input{
-  width:100%;
-  padding:8px;
-  margin:5px 0;
-}
-
-button{
-  width:100%;
-  padding:8px;
-  background:#e10600;
-  border:none;
-  color:white;
+#menu p{
+  margin:0;
+  padding:12px;
+  border-bottom:1px solid #333;
   cursor:pointer;
 }
-</style></head><body><header>
-  <div class="menu" onclick="toggleMenu()">☰</div>
-  <div class="admin" onclick="openAdmin()">ADMIN</div>
-  <h1>MANAGER RP</h1>
-</header><div class="sidebar" id="sidebar">
-  <a href="#super">Süper Lig</a>
-  <a href="#tff">TFF 1</a>
-  <a href="#blog">Blog / Haber</a>
-</div><!-- SUPER LIG --><div class="section" id="super">
-  <h2>Süper Lig TAKIMLAR</h2>
-  <div id="superList"></div>
-</div><!-- TFF1 --><div class="section" id="tff">
-  <h2>TFF 1. LİG DOLU TAKIMLAR</h2>
-  <div id="tffList"></div>
-</div><!-- BLOG --><div class="section" id="blog">
-  <h2>Blog / Haber</h2>
-  <div id="blogList"></div>
-</div><!-- ADMIN --><div class="modal" id="modal">
-  <div class="box">
-    <h3>Admin Giriş</h3>
-    <input id="u" placeholder="kullanıcı">
-    <input id="p" type="password" placeholder="şifre">
-    <button onclick="login()">Giriş</button>
-  </div>
-</div><script>
 
-let superLig=[
-"İstanbul Başakşehir ✅",
-"Galatasaray ✅",
-"Beşiktaş JK ✅",
-"Çaykur Rizespor ✅",
-"Fenerbahçe ✅",
-"Göztepe FK ✅",
-"Erzurumspor ✅",
-"Samsunspor ✅",
-"Kocaelispor ✅",
-"Trabzonspor ✅",
-"Kasımpaşa FK ✅",
-"Gaziantep FK ✅",
-"Corendon Alanyaspor ✅",
-"Konyaspor ✅",
-"Antalyaspor ✅",
-"Çorum FK ✅",
-"Kayserispor ✅",
-"Amed Sportif Faaliyetler ✅"
-];
-
-let tff=[
-"Bursaspor ✅",
-"Bodrumspor ✅",
-"İstanbulspor ✅",
-"Elazığspor ✅",
-"Iğdır FK ✅",
-"Gençlerbirliği ✅",
-"İkas Eyüpspor ❌",
-"Karagümrük ✅",
-"Bandırmaspor ✅",
-"Keçiörengücü ✅",
-"Manisa FK ✅",
-"Sivasspor ✅",
-"Vanspor FK ✅",
-"Boluspor ❌",
-"Sarıyer SK ✅",
-"Ümraniyespor ✅",
-"Batman Petrolspor ✅",
-"Erokspor ✅",
-"Pendikspor ✅",
-"Aliağa FK ✓"
-];
-
-let blog=[
-"Lig başladı! Yeni sezon heyecanı 🔥"
-];
-
-function render(){
-  document.getElementById("superList").innerHTML=
-  superLig.map(t=>`<div class='card'>${t}</div>`).join("");
-
-  document.getElementById("tffList").innerHTML=
-  tff.map(t=>`<div class='card'>${t}</div>`).join("");
-
-  document.getElementById("blogList").innerHTML=
-  blog.map(b=>`<div class='card'>📰 ${b}</div>`).join("");
+#menu p:hover{
+  background:#333;
 }
+
+/* CONTENT */
+.content{
+  margin-top:60px;
+  padding:15px;
+  display:none;
+}
+
+/* TEAM */
+.team{
+  padding:8px;
+  border-bottom:1px solid #333;
+}
+
+.ok{color:lime;}
+.no{color:red;}
+</style>
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div id="menuBtn" onclick="toggleMenu()">☰</div>
+  <div>MANAGER RP</div>
+  <div id="adminBtn" onclick="adminLogin()">ADMIN</div>
+</div>
+
+<!-- MENU -->
+<div id="menu">
+  <p onclick="show('super')">Süper Lig</p>
+  <p onclick="show('tff')">TFF 1. Lig</p>
+  <p onclick="show('blog')">Blog</p>
+</div>
+
+<!-- SÜPER LİG -->
+<div id="super" class="content">
+<h2>SÜPER LİG</h2>
+
+<div class="team">İstanbul Başakşehir <span class="ok">✔</span></div>
+<div class="team">Galatasaray <span class="ok">✔</span></div>
+<div class="team">Beşiktaş JK <span class="ok">✔</span></div>
+<div class="team">Fenerbahçe <span class="ok">✔</span></div>
+<div class="team">Trabzonspor <span class="ok">✔</span></div>
+<div class="team">Konyaspor <span class="ok">✔</span></div>
+<div class="team">Antalyaspor <span class="ok">✔</span></div>
+<div class="team">Samsunspor <span class="ok">✔</span></div>
+<div class="team">Göztepe FK <span class="ok">✔</span></div>
+</div>
+
+<!-- TFF 1 -->
+<div id="tff" class="content">
+<h2>TFF 1. LİG</h2>
+
+<div class="team">Bursaspor <span class="ok">✔</span></div>
+<div class="team">Bodrumspor <span class="ok">✔</span></div>
+<div class="team">İstanbulspor <span class="ok">✔</span></div>
+<div class="team">Gençlerbirliği <span class="ok">✔</span></div>
+<div class="team">Eyüpspor <span class="no">✖</span></div>
+<div class="team">Karagümrük <span class="ok">✔</span></div>
+<div class="team">Sivasspor <span class="ok">✔</span></div>
+<div class="team">Boluspor <span class="no">✖</span></div>
+</div>
+
+<!-- BLOG -->
+<div id="blog" class="content">
+<h2>BLOG / HABER</h2>
+<div id="blogList"></div>
+</div>
+
+<script>
 
 function toggleMenu(){
-  document.getElementById("sidebar").classList.toggle("active");
+  let m = document.getElementById("menu");
+  m.style.display = (m.style.display==="flex") ? "none" : "flex";
 }
 
-function openAdmin(){
-  document.getElementById("modal").style.display="flex";
+function show(id){
+  document.querySelectorAll(".content").forEach(c=>c.style.display="none");
+  document.getElementById(id).style.display="block";
+  document.getElementById("menu").style.display="none";
 }
 
-function login(){
-  let u=document.getElementById("u").value;
-  let p=document.getElementById("p").value;
+/* ADMIN */
+function adminLogin(){
+  let u = prompt("Kullanıcı adı:");
+  let p = prompt("Şifre:");
 
-  if(u==="admin_mustafa" && p=="1453"){
-    alert("Giriş başarılı");
-    document.getElementById("modal").style.display="none";
+  if(u==="admin_mustafa" && p==="1453"){
+    alert("Admin giriş başarılı!");
 
-    let secim=prompt("1=Blog ekle / 2=Hiçbir şey");
-
-    if(secim=="1"){
-      let y=prompt("Haber yaz");
-      if(y){
-        blog.push(y);
-        render();
-      }
+    let news = prompt("Haber ekle:");
+    if(news){
+      let div = document.createElement("div");
+      div.innerHTML = "📰 " + news;
+      document.getElementById("blogList").appendChild(div);
     }
-  }else alert("hatalı giriş");
+
+  } else {
+    alert("Hatalı giriş!");
+  }
 }
 
-render();
+/* default */
+show("super");
 
-</script></body>
+</script>
+
+</body>
 </html>
