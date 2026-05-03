@@ -2,134 +2,121 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manager Roleplay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manager Roleplay Lig Sistemi</title>
+
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0d1117;
-      color: white;
+    body{
+      margin:0;
+      font-family:Arial;
+      background:#0d1117;
+      color:white;
     }
 
-    header {
-      background: linear-gradient(135deg, #111827, #1f2937);
-      padding: 40px;
-      text-align: center;
+    header{
+      text-align:center;
+      padding:40px;
+      background:linear-gradient(135deg,#111827,#1f2937);
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 40px;
+    header h1{
+      margin:0;
+      font-size:40px;
     }
 
-    header p {
-      color: #cbd5e1;
+    nav{
+      display:flex;
+      justify-content:center;
+      gap:20px;
+      background:#111827;
+      padding:15px;
+      flex-wrap:wrap;
     }
 
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      background: #111827;
-      padding: 15px;
-      flex-wrap: wrap;
+    nav a{
+      color:white;
+      text-decoration:none;
+      font-weight:bold;
     }
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
+    nav a:hover{
+      color:#38bdf8;
     }
 
-    nav a:hover {
-      color: #38bdf8;
+    .section{
+      max-width:1000px;
+      margin:40px auto;
+      padding:0 20px;
     }
 
-    .section {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
+    h2{
+      border-left:5px solid #38bdf8;
+      padding-left:10px;
     }
 
-    .section h2 {
-      border-left: 5px solid #38bdf8;
-      padding-left: 10px;
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:15px;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 15px;
+    .card{
+      background:#161b22;
+      padding:15px;
+      border-radius:12px;
+      transition:0.3s;
     }
 
-    .card {
-      background: #161b22;
-      padding: 15px;
-      border-radius: 12px;
+    .card:hover{
+      transform:scale(1.03);
     }
 
-    .discord {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 20px;
-      background: #5865F2;
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #111827;
-      margin-top: 40px;
-      color: #94a3b8;
+    footer{
+      text-align:center;
+      padding:20px;
+      background:#111827;
+      margin-top:40px;
+      color:#94a3b8;
     }
   </style>
 </head>
+
 <body>
 
 <header>
   <h1>Manager Roleplay</h1>
-  <p>Futbol Menajerlik Sunucusu</p>
-  <a class="discord" href="https://discord.gg/managerp">Discord'a Katıl</a>
+  <p>Süper Lig & TFF 1. Lig Sistemi</p>
 </header>
 
 <nav>
-  <a href="#lig">Ligler</a>
-  <a href="#takim">Takımlar</a>
-  <a href="#transfer">Transferler</a>
+  <a href="#superlig">Süper Lig</a>
+  <a href="#tff1">TFF 1. Lig</a>
 </nav>
 
-<section class="section" id="lig">
-  <h2>Ligler</h2>
+<section class="section" id="superlig">
+  <h2>Süper Lig</h2>
   <div class="cards">
-    <div class="card">Serie A</div>
-    <div class="card">Premier League</div>
-    <div class="card">La Liga</div>
+    <div class="card">Galatasaray</div>
+    <div class="card">Fenerbahçe</div>
+    <div class="card">Beşiktaş</div>
+    <div class="card">Trabzonspor</div>
+    <div class="card">Başakşehir</div>
   </div>
 </section>
 
-<section class="section" id="takim">
-  <h2>Takımlar</h2>
+<section class="section" id="tff1">
+  <h2>TFF 1. Lig</h2>
   <div class="cards">
-    <div class="card">Inter - Mustafa</div>
-    <div class="card">Milan - Boş</div>
-    <div class="card">Roma - Boş</div>
-  </div>
-</section>
-
-<section class="section" id="transfer">
-  <h2>Transferler</h2>
-  <div class="cards">
-    <div class="card">Oyuncu A → Milan</div>
-    <div class="card">Oyuncu B → Inter</div>
+    <div class="card">Eyüpspor</div>
+    <div class="card">Samsunspor</div>
+    <div class="card">Gençlerbirliği</div>
+    <div class="card">Bodrum FK</div>
+    <div class="card">Kocaelispor</div>
   </div>
 </section>
 
 <footer>
-  © Manager Roleplay
+  © Manager Roleplay Lig Sistemi
 </footer>
 
 </body>
