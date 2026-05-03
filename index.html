@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Manager RP | Full System</title>  <style>
+  <title>Manager RP</title>  <style>
     :root{
       --red:#e10600;
       --dark:#0b0b0f;
@@ -17,12 +17,12 @@
       color:var(--white);
     }
 
-    /* TOP BAR */
+    /* HEADER */
     header{
       position:relative;
-      padding:25px;
       text-align:center;
-      background:linear-gradient(135deg,var(--red),#7a0000);
+      padding:40px 20px;
+      background:linear-gradient(135deg,var(--red),#6a0000);
     }
 
     header h1{
@@ -30,17 +30,28 @@
       font-size:34px;
     }
 
-    /* HAMBURGER */
+    .intro{
+      text-align:center;
+      margin:30px 0;
+      font-size:18px;
+      line-height:1.8;
+    }
+
+    .intro span{
+      display:block;
+      font-size:20px;
+      font-weight:bold;
+    }
+
+    /* MENU */
     .menuBtn{
       position:absolute;
       left:15px;
       top:15px;
       font-size:28px;
       cursor:pointer;
-      user-select:none;
     }
 
-    /* ADMIN BTN */
     .adminBtn{
       position:absolute;
       right:15px;
@@ -55,15 +66,17 @@
     /* SIDEBAR */
     .sidebar{
       position:fixed;
-      left:-220px;
+      left:-240px;
       top:0;
-      width:200px;
+      width:220px;
       height:100%;
       background:#111;
       padding:20px;
       transition:0.3s;
       border-right:2px solid var(--red);
     }
+
+    .sidebar.active{left:0;}
 
     .sidebar a{
       display:block;
@@ -73,11 +86,7 @@
       font-weight:bold;
     }
 
-    .sidebar.active{
-      left:0;
-    }
-
-    /* SECTIONS */
+    /* SECTION */
     .section{
       max-width:1000px;
       margin:40px auto;
@@ -99,6 +108,19 @@
       background:var(--card);
       padding:15px;
       border-radius:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .ok{color:#22c55e;font-weight:bold;}
+    .no{color:#ef4444;font-weight:bold;}
+
+    footer{
+      text-align:center;
+      padding:20px;
+      background:#111;
+      margin-top:40px;
     }
 
     /* ADMIN MODAL */
@@ -114,20 +136,20 @@
       align-items:center;
     }
 
-    .modalBox{
+    .box{
       background:#111;
       padding:20px;
-      border-radius:12px;
+      border-radius:10px;
       width:300px;
     }
 
-    .modalBox input{
+    input{
       width:100%;
       padding:10px;
       margin:5px 0;
     }
 
-    .modalBox button{
+    button{
       width:100%;
       padding:10px;
       background:var(--red);
@@ -136,60 +158,59 @@
       font-weight:bold;
       cursor:pointer;
     }
-
-    footer{
-      text-align:center;
-      padding:20px;
-      margin-top:40px;
-      background:#111;
-      color:#aaa;
-    }
   </style></head><body><header>
   <div class="menuBtn" onclick="toggleMenu()">☰</div>
   <div class="adminBtn" onclick="openAdmin()">ADMIN</div>
-  <h1>MANAGER RP FULL SYSTEM</h1>
-</header><!-- SIDEBAR --><div class="sidebar" id="sidebar">
-  <a href="#superlig">Süper Lig</a>
-  <a href="#tff1">TFF 1</a>
+  <h1>MANAGER RP</h1>
+</header><div class="intro">
+  <span>MANAGER RP Kurucular</span>
+  Yaso<br>Mustafa<br>Redline
+</div><div class="sidebar" id="sidebar">
+  <a href="#teams">Takım Listesi</a>
+  <a href="#super">Süper Lig</a>
+  <a href="#tff">TFF 1</a>
   <a href="#puan">Puan Durumu</a>
-</div><!-- SUPER LIG --><section class="section" id="superlig">
+</div><section class="section" id="teams">
+  <h2>Takım Listesi</h2>
+  <div class="cards" id="teamList"></div>
+</section><section class="section" id="super">
   <h2>Süper Lig</h2>
   <div class="cards" id="superList"></div>
-</section><!-- TFF1 --><section class="section" id="tff1">
+</section><section class="section" id="tff">
   <h2>TFF 1. Lig</h2>
   <div class="cards" id="tffList"></div>
-</section><!-- PUAN --><section class="section" id="puan">
+</section><section class="section" id="puan">
   <h2>Puan Durumu</h2>
   <div class="cards" id="puanList"></div>
-</section><!-- ADMIN MODAL --><div class="modal" id="adminModal">
-  <div class="modalBox">
+</section><div class="modal" id="adminModal">
+  <div class="box">
     <h3>Admin Giriş</h3>
     <input id="u" placeholder="Kullanıcı" />
     <input id="p" type="password" placeholder="Şifre" />
     <button onclick="login()">Giriş</button>
   </div>
-</div><script>
-let superLig = JSON.parse(localStorage.getItem("super")) || [
-  {name:"Galatasaray",pts:10},
-  {name:"Fenerbahçe",pts:8},
-  {name:"Beşiktaş",pts:6}
+</div><footer>
+  discord.gg/managerp
+</footer><script>
+let teams = JSON.parse(localStorage.getItem("teams")) || [
+  {name:"Galatasaray",full:true},
+  {name:"Fenerbahçe",full:false},
+  {name:"Beşiktaş",full:true}
 ];
 
-let tff1 = JSON.parse(localStorage.getItem("tff")) || [
-  {name:"Eyüpspor",pts:7},
-  {name:"Samsunspor",pts:5}
-];
+let superL = JSON.parse(localStorage.getItem("super")) || [];
+let tffL = JSON.parse(localStorage.getItem("tff")) || [];
 
 function render(){
-  document.getElementById("superList").innerHTML = superLig.map(t=>
-    `<div class='card'>${t.name} - ${t.pts} P</div>`).join("");
 
-  document.getElementById("tffList").innerHTML = tff1.map(t=>
-    `<div class='card'>${t.name} - ${t.pts} P</div>`).join("");
+  document.getElementById("teamList").innerHTML = teams.map((t,i)=>
+    `<div class='card'>${t.name} <span onclick='toggle(${i})' style='cursor:pointer'>${t.full?"<span class=ok>✅</span>":"<span class=no>❌</span>"}</span></div>`).join("");
 
-  let all=[...superLig,...tff1];
-  document.getElementById("puanList").innerHTML = all.sort((a,b)=>b.pts-a.pts)
-  .map(t=>`<div class='card'>${t.name} - ${t.pts} P</div>`).join("");
+  document.getElementById("superList").innerHTML = superL.map(t=>`<div class='card'>${t}</div>`).join("");
+  document.getElementById("tffList").innerHTML = tffL.map(t=>`<div class='card'>${t}</div>`).join("");
+
+  let all=[...superL,...tffL];
+  document.getElementById("puanList").innerHTML = all.map(t=>`<div class='card'>${t}</div>`).join("");
 }
 
 function toggleMenu(){
@@ -207,25 +228,13 @@ function login(){
   if(u=="admin_mustafa" && p=="1453"){
     alert("Giriş başarılı");
     document.getElementById("adminModal").style.display="none";
-    adminPanel();
-  }else{
-    alert("Hatalı giriş");
-  }
+  }else alert("Hatalı giriş");
 }
 
-function adminPanel(){
-  let team=prompt("Takım adı yaz (Süper Lig eklenir)");
-  if(team){
-    superLig.push({name:team,pts:0});
-    localStorage.setItem("super",JSON.stringify(superLig));
-    render();
-  }
-}
-
-window.onclick=function(e){
-  if(e.target.id=="adminModal"){
-    document.getElementById("adminModal").style.display="none";
-  }
+function toggle(i){
+  teams[i].full=!teams[i].full;
+  localStorage.setItem("teams",JSON.stringify(teams));
+  render();
 }
 
 render();
