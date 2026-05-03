@@ -14,11 +14,41 @@
       text-align:center;
       padding:40px;
       background:linear-gradient(135deg,#111827,#1f2937);
+      position:relative;
     }
 
     header h1{
       margin:0;
       font-size:40px;
+    }
+
+    /* ADMIN TOP RIGHT */
+    .admin-login{
+      position:absolute;
+      top:15px;
+      right:15px;
+      background:#161b22;
+      padding:10px;
+      border-radius:10px;
+      display:flex;
+      gap:5px;
+      align-items:center;
+    }
+
+    .admin-login input{
+      padding:5px;
+      border:none;
+      border-radius:5px;
+      width:120px;
+    }
+
+    .admin-login button{
+      padding:6px 10px;
+      border:none;
+      border-radius:5px;
+      background:#38bdf8;
+      cursor:pointer;
+      font-weight:bold;
     }
 
     nav{
@@ -68,41 +98,7 @@
       transform:scale(1.03);
     }
 
-    footer{
-      text-align:center;
-      padding:20px;
-      background:#111827;
-      margin-top:40px;
-      color:#94a3b8;
-    }
-
-    /* ADMIN */
-    .admin-box{
-      max-width:400px;
-      margin:30px auto;
-      background:#161b22;
-      padding:20px;
-      border-radius:12px;
-      text-align:center;
-    }
-
-    .admin-box input{
-      width:90%;
-      padding:10px;
-      margin:10px 0;
-      border-radius:8px;
-      border:none;
-    }
-
-    .admin-btn{
-      padding:10px 20px;
-      background:#38bdf8;
-      border:none;
-      border-radius:8px;
-      cursor:pointer;
-      font-weight:bold;
-    }
-
+    /* ADMIN PANEL */
     #adminPanel{
       display:none;
       max-width:1000px;
@@ -111,59 +107,87 @@
       background:#0f172a;
       border-radius:12px;
     }
+
+    .add-team{
+      display:flex;
+      gap:10px;
+      margin-bottom:20px;
+    }
+
+    .add-team input{
+      flex:1;
+      padding:10px;
+      border:none;
+      border-radius:8px;
+    }
+
+    .add-team button{
+      padding:10px 15px;
+      border:none;
+      border-radius:8px;
+      background:#22c55e;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    footer{
+      text-align:center;
+      padding:20px;
+      background:#111827;
+      margin-top:40px;
+      color:#94a3b8;
+    }
   </style></head><body><header>
-  <h1>Manager Roleplay</h1>
-  <p>Süper Lig & TFF 1. Lig Sistemi</p>
-</header><nav>
+  <h1>Manager Roleplay</h1>  <div class="admin-login">
+    <input id="user" placeholder="Admin" />
+    <input id="pass" type="password" placeholder="Şifre" />
+    <button onclick="login()">Giriş</button>
+  </div></header><nav>
   <a href="#superlig">Süper Lig</a>
   <a href="#tff1">TFF 1. Lig</a>
-  <a href="#admin">Admin</a>
 </nav><section class="section" id="superlig">
   <h2>Süper Lig</h2>
-  <div class="cards">
+  <div class="cards" id="superLigList">
     <div class="card">Galatasaray</div>
     <div class="card">Fenerbahçe</div>
     <div class="card">Beşiktaş</div>
-    <div class="card">Trabzonspor</div>
-    <div class="card">Başakşehir</div>
   </div>
 </section><section class="section" id="tff1">
   <h2>TFF 1. Lig</h2>
   <div class="cards">
     <div class="card">Eyüpspor</div>
     <div class="card">Samsunspor</div>
-    <div class="card">Gençlerbirliği</div>
-    <div class="card">Kocaelispor</div>
-    <div class="card">Bodrum FK</div>
-  </div>
-</section><section class="section" id="admin">
-  <h2>Admin Girişi</h2>  <div class="admin-box">
-    <input id="username" placeholder="Kullanıcı adı" />
-    <input id="password" type="password" placeholder="Şifre" />
-    <br>
-    <button class="admin-btn" onclick="login()">Giriş Yap</button>
   </div>
 </section><section id="adminPanel">
-  <h2>Admin Panel</h2>
-  <p>Hoş geldin Admin 👋</p>
-  <div class="cards">
-    <div class="card">Maç Ekle</div>
-    <div class="card">Transfer Yap</div>
-    <div class="card">Takım Yönet</div>
-  </div>
+  <h2>Admin Panel</h2>  <div class="add-team">
+    <input id="teamName" placeholder="Takım adı yaz" />
+    <button onclick="addTeam()">Takım Ekle</button>
+  </div>  <div class="cards" id="adminList"></div>
 </section><footer>
-  © Manager Roleplay Lig Sistemi
+  © Manager Roleplay
 </footer><script>
 function login(){
-  var user = document.getElementById("username").value;
-  var pass = document.getElementById("password").value;
+  let u=document.getElementById('user').value;
+  let p=document.getElementById('pass').value;
 
-  if(user === "admin_mustafa" && pass === "1453"){
-    document.getElementById("adminPanel").style.display = "block";
-    alert("Giriş başarılı");
-  } else {
-    alert("Hatalı giriş");
+  if(u==='admin_mustafa' && p==='1453'){
+    document.getElementById('adminPanel').style.display='block';
+    alert('Admin giriş başarılı');
+  }else{
+    alert('Hatalı giriş');
   }
+}
+
+function addTeam(){
+  let name=document.getElementById('teamName').value;
+  if(name==='') return;
+
+  let div=document.createElement('div');
+  div.className='card';
+  div.innerText=name;
+
+  document.getElementById('adminList').appendChild(div);
+  document.getElementById('teamName').value='';
 }
 </script></body>
 </html>
