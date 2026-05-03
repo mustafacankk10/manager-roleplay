@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="tr">
+<!DOCTYPE html><html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Manager Roleplay Lig Sistemi</title>
-
-  <style>
+  <title>Manager Roleplay Lig Sistemi</title>  <style>
     body{
       margin:0;
       font-family:Arial;
@@ -78,22 +75,50 @@
       margin-top:40px;
       color:#94a3b8;
     }
-  </style>
-</head>
 
-<body>
+    /* ADMIN */
+    .admin-box{
+      max-width:400px;
+      margin:30px auto;
+      background:#161b22;
+      padding:20px;
+      border-radius:12px;
+      text-align:center;
+    }
 
-<header>
+    .admin-box input{
+      width:90%;
+      padding:10px;
+      margin:10px 0;
+      border-radius:8px;
+      border:none;
+    }
+
+    .admin-btn{
+      padding:10px 20px;
+      background:#38bdf8;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    #adminPanel{
+      display:none;
+      max-width:1000px;
+      margin:30px auto;
+      padding:20px;
+      background:#0f172a;
+      border-radius:12px;
+    }
+  </style></head><body><header>
   <h1>Manager Roleplay</h1>
   <p>Süper Lig & TFF 1. Lig Sistemi</p>
-</header>
-
-<nav>
+</header><nav>
   <a href="#superlig">Süper Lig</a>
   <a href="#tff1">TFF 1. Lig</a>
-</nav>
-
-<section class="section" id="superlig">
+  <a href="#admin">Admin</a>
+</nav><section class="section" id="superlig">
   <h2>Süper Lig</h2>
   <div class="cards">
     <div class="card">Galatasaray</div>
@@ -102,22 +127,43 @@
     <div class="card">Trabzonspor</div>
     <div class="card">Başakşehir</div>
   </div>
-</section>
-
-<section class="section" id="tff1">
+</section><section class="section" id="tff1">
   <h2>TFF 1. Lig</h2>
   <div class="cards">
     <div class="card">Eyüpspor</div>
     <div class="card">Samsunspor</div>
     <div class="card">Gençlerbirliği</div>
-    <div class="card">Bodrum FK</div>
     <div class="card">Kocaelispor</div>
+    <div class="card">Bodrum FK</div>
   </div>
-</section>
-
-<footer>
+</section><section class="section" id="admin">
+  <h2>Admin Girişi</h2>  <div class="admin-box">
+    <input id="username" placeholder="Kullanıcı adı" />
+    <input id="password" type="password" placeholder="Şifre" />
+    <br>
+    <button class="admin-btn" onclick="login()">Giriş Yap</button>
+  </div>
+</section><section id="adminPanel">
+  <h2>Admin Panel</h2>
+  <p>Hoş geldin Admin 👋</p>
+  <div class="cards">
+    <div class="card">Maç Ekle</div>
+    <div class="card">Transfer Yap</div>
+    <div class="card">Takım Yönet</div>
+  </div>
+</section><footer>
   © Manager Roleplay Lig Sistemi
-</footer>
+</footer><script>
+function login(){
+  var user = document.getElementById("username").value;
+  var pass = document.getElementById("password").value;
 
-</body>
+  if(user === "admin_mustafa" && pass === "1453"){
+    document.getElementById("adminPanel").style.display = "block";
+    alert("Giriş başarılı");
+  } else {
+    alert("Hatalı giriş");
+  }
+}
+</script></body>
 </html>
