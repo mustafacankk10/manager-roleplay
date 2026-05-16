@@ -75,7 +75,6 @@ nav{position:sticky;top:0;z-index:200;background:var(--red3);border-bottom:2px s
 .standings-table tr:hover td{background:var(--bg3)}
 .standings-table .rank{font-weight:700;color:var(--gold)}
 .standings-table .pts{font-weight:700;color:var(--white)}
-.standings-table tr.highlight td{background:rgba(139,0,0,0.3);border-left:3px solid var(--gold)}
 
 /* ── ADMIN ── */
 #admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;overflow-y:auto}
@@ -95,7 +94,6 @@ nav{position:sticky;top:0;z-index:200;background:var(--red3);border-bottom:2px s
 .form-row label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
 .form-row input,.form-row select,.form-row textarea{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--text);font-family:'Barlow',sans-serif;font-size:0.9rem;padding:0.6rem 0.8rem;outline:none;transition:border-color 0.2s}
 .form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--gold)}
-.form-row select option{background:var(--bg3)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .save-btn{background:var(--gold);color:var(--red3);font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border:none;padding:0.75rem 2rem;cursor:pointer;transition:background 0.2s;margin-top:0.5rem}
 .save-btn:hover{background:var(--gold2)}
@@ -190,7 +188,7 @@ footer a{color:var(--gold);text-decoration:none}
     </div>
     <div class="admin-body">
 
-      <!-- HABER -->
+      <!-- HABER TAB -->
       <div class="admin-section active" id="tab-haber">
         <div class="form-row"><label>Başlık</label><input id="n-title" placeholder="Haber başlığı"/></div>
         <div class="form-row"><label>Kategori</label><input id="n-cat" placeholder="Örn: Transfer, Maç Özeti"/></div>
@@ -202,20 +200,8 @@ footer a{color:var(--gold);text-decoration:none}
         </div>
       </div>
 
-      <!-- MAÇ -->
+      <!-- MAÇ TAB -->
       <div class="admin-section" id="tab-mac">
-        <div class="form-grid">
-          <div class="form-row"><label>Ev Sahibi</label>
-            <select id="m-home"></select>
-          </div>
-          <div class="form-row"><label>Deplasman</label>
-            <select id="m-away"></select>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-row"><label>Tarih</label><input id="m-date" type="date"/></div>
-          <div class="form-row"><label>Saat</label><input id="m-time" type="time"/></div>
-        </div>
         <div class="form-grid">
           <div class="form-row"><label>Lig</label>
             <select id="m-league" onchange="updateAdminMatchTeams()">
@@ -224,6 +210,14 @@ footer a{color:var(--gold);text-decoration:none}
             </select>
           </div>
           <div class="form-row"><label>Stat</label><input id="m-stadium" placeholder="Stat adı"/></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-row"><label>Ev Sahibi</label><select id="m-home"></select></div>
+          <div class="form-row"><label>Deplasman</label><select id="m-away"></select></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-row"><label>Tarih</label><input id="m-date" type="date"/></div>
+          <div class="form-row"><label>Saat</label><input id="m-time" type="time"/></div>
         </div>
         <div class="form-grid">
           <div class="form-row"><label>Skor Ev (boş=oynanmadı)</label><input id="m-score-h" type="number" min="0" placeholder="—"/></div>
@@ -237,7 +231,7 @@ footer a{color:var(--gold);text-decoration:none}
         </div>
       </div>
 
-      <!-- PUAN DURUMU -->
+      <!-- PUAN DURUMU TAB -->
       <div class="admin-section" id="tab-puan">
         <div class="form-row"><label>Lig</label>
           <select id="st-league" onchange="updateAdminStandingTeams()">
@@ -246,9 +240,7 @@ footer a{color:var(--gold);text-decoration:none}
           </select>
         </div>
         <div class="form-grid">
-          <div class="form-row"><label>Takım Seç</label>
-            <select id="st-team"></select>
-          </div>
+          <div class="form-row"><label>Takım Seç</label><select id="st-team" onchange="loadStandingFormValues()"></select></div>
           <div class="form-row"><label>Durum (Boş / Dolu)</label>
             <select id="st-status">
               <option value="Dolu">Dolu ✅</option>
@@ -257,18 +249,18 @@ footer a{color:var(--gold);text-decoration:none}
           </div>
         </div>
         <div class="form-grid">
-          <div class="form-row"><label>Puan</label><input id="st-pts" type="number" min="0" value="0"/></div>
-          <div class="form-row"><label>Oynanan</label><input id="st-p" type="number" min="0" value="0"/></div>
+          <div class="form-row"><label>Oynanan (O)</label><input id="st-p" type="number" min="0" value="0"/></div>
+          <div class="form-row"><label>Puan (P)</label><input id="st-pts" type="number" min="0" value="0"/></div>
         </div>
         <div class="form-grid">
-          <div class="form-row"><label>Galibiyet</label><input id="st-w" type="number" min="0" value="0"/></div>
-          <div class="form-row"><label>Beraberlik</label><input id="st-d" type="number" min="0" value="0"/></div>
+          <div class="form-row"><label>Galibiyet (G)</label><input id="st-w" type="number" min="0" value="0"/></div>
+          <div class="form-row"><label>Beraberlik (B)</label><input id="st-d" type="number" min="0" value="0"/></div>
         </div>
         <div class="form-grid">
-          <div class="form-row"><label>Mağlubiyet</label><input id="st-l" type="number" min="0" value="0"/></div>
-          <div class="form-row"><label>Attığı Gol</label><input id="st-gf" type="number" min="0" value="0"/></div>
+          <div class="form-row"><label>Mağlubiyet (M)</label><input id="st-l" type="number" min="0" value="0"/></div>
+          <div class="form-row"><label>Attığı Gol (A)</label><input id="st-gf" type="number" min="0" value="0"/></div>
         </div>
-        <div class="form-row"><label>Yediği Gol</label><input id="st-ga" type="number" min="0" value="0"/></div>
+        <div class="form-row"><label>Yediği Gol (Y)</label><input id="st-ga" type="number" min="0" value="0"/></div>
         <button class="save-btn" onclick="saveStandingData()">Verileri Güncelle</button>
       </div>
 
@@ -279,43 +271,29 @@ footer a{color:var(--gold);text-decoration:none}
 <div class="toast" id="toast"></div>
 
 <footer>
-  Bu site <a href="https://discord.gg/managerp" target="_blank">discord.gg/managerp</a> rol yapma (RP) topluluğu için oluşturulmuştur. Gerçek kulüplerle resmi bir bağlantısı yoktur.
+  Bu site <a href="https://discord.gg/managerp" target="_blank">discord.gg/managerp</a> rol yapma (RP) topluluğu için oluşturulmuştur.
 </footer>
 
 <script>
-// Sabit Temizlenmiş Takım Listeleri
-const TFF1_TEAMS = [
-  "Bursaspor", "Bodrumspor", "İstanbulspor", "Elazığspor", "Iğdır FK", 
-  "Gençlerbirliği", "İkas Eyüpspor", "Karagümrük", "Bandırmaspor", 
-  "Keçiörengücü", "Manisa", "Sivasspor", "Vanspor", "Boluspor", 
-  "Sarıyer SK", "Ümraniyespor", "Batman Petrol Spor", "Erokspor", "Pendikspor", "Aliağa"
-];
+// Sabit Takım Listeleri
+const TFF1_TEAMS = ["Bursaspor", "Bodrumspor", "İstanbulspor", "Elazığspor", "Iğdır FK", "Gençlerbirliği", "İkas Eyüpspor", "Karagümrük", "Bandırmaspor", "Keçiörengücü", "Manisa", "Sivasspor", "Vanspor", "Boluspor", "Sarıyer SK", "Ümraniyespor", "Batman Petrol Spor", "Erokspor", "Pendikspor", "Aliağa"];
+const SUPERLIG_TEAMS = ["İstanbul Başakşehir", "Galatasaray", "Beşiktaş JK", "Çaykur Rizespor", "Fenerbahçe", "Göztepe FK", "Erzurumspor", "Samsunspor", "Kocaelispor", "Trabzonspor", "Kasımpaşa FK", "Gaziantep FK", "Corendon Alanyaspor", "Konyaspor", "Antalyaspor", "Çorum FK", "Kayserispor", "Amed Sportif Faaliyetler"];
 
-const SUPERLIG_TEAMS = [
-  "İstanbul Başakşehir", "Galatasaray", "Beşiktaş JK", "Çaykur Rizespor", 
-  "Fenerbahçe", "Göztepe FK", "Erzurumspor", "Samsunspor", "Kocaelispor", 
-  "Trabzonspor", "Kasımpaşa FK", "Gaziantep FK", "Corendon Alanyaspor", 
-  "Konyaspor", "Antalyaspor", "Çorum FK", "Kayserispor", "Amed Sportif Faaliyetler"
-];
-
-// ── STATE & KALICI HAFIZA (LOCALSTORAGE) ──
+// STATE & VERİTABANI BAĞLANTISI
 let state = {
   news: JSON.parse(localStorage.getItem('mp_news')) || [],
   matches: JSON.parse(localStorage.getItem('mp_matches')) || [],
   standings: JSON.parse(localStorage.getItem('mp_standings')) || { superlig: [], tff1: [] },
   currentStandingsLeague: 'superlig',
-  isAdminAuthenticated: false
+  isAdminAuthenticated: JSON.parse(sessionStorage.getItem('mp_admin_auth')) || false
 };
 
-// Eğer hafızada puan durumu yoksa başlangıç takımlarını varsayılan ayarlarla oluştur
+// Varsayılan Tabloyu Doldurma
 if (state.standings.superlig.length === 0 && state.standings.tff1.length === 0) {
-  SUPERLIG_TEAMS.forEach(team => {
-    state.standings.superlig.push({ name: team, status: "Dolu", p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 });
-  });
-  TFF1_TEAMS.forEach(team => {
-    // Sadece Boluspor varsayılan olarak boş listelendiği için kontrol koyduk
-    let status = (team === "Boluspor") ? "Boş" : "Dolu";
-    state.standings.tff1.push({ name: team, status: status, p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 });
+  SUPERLIG_TEAMS.forEach(t => state.standings.superlig.push({ name: t, status: "Dolu", p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 }));
+  TFF1_TEAMS.forEach(t => {
+    let status = (t === "Boluspor") ? "Boş" : "Dolu";
+    state.standings.tff1.push({ name: t, status: status, p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 });
   });
   saveToLocalStorage();
 }
@@ -326,7 +304,7 @@ function saveToLocalStorage() {
   localStorage.setItem('mp_standings', JSON.stringify(state.standings));
 }
 
-// ── NAV & SAYFA YÖNETİMİ ──
+// SAYFA GEÇİŞLERİ VE MENÜ BUTONLARI
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const targetPage = document.getElementById('page-' + id);
@@ -336,7 +314,6 @@ function showPage(id, btn) {
   if (btn) {
     btn.classList.add('active');
   } else {
-    // Manuel tetiklemelerde menüdeki butonları aktif et
     if(id === 'haberler') document.querySelectorAll('.nav-btn')[0].classList.add('active');
     if(id === 'tff1') document.querySelectorAll('.nav-btn')[1].classList.add('active');
     if(id === 'superlig') document.querySelectorAll('.nav-btn')[2].classList.add('active');
@@ -344,11 +321,14 @@ function showPage(id, btn) {
   closeDropdown();
 }
 
-function toggleDropdown() {
-  document.getElementById('pd-menu').classList.toggle('open');
-}
-function closeDropdown() {
-  document.getElementById('pd-menu').classList.remove('open');
-}
-document.addEventListener('click', e => {
-  if (!e.
+function toggleDropdown() { document.getElementById('pd-menu').classList.toggle('open'); }
+function closeDropdown() { document.getElementById('pd-menu').classList.remove('open'); }
+document.addEventListener('click', e => { if (!e.target.closest('.nav-dropdown')) closeDropdown(); });
+
+function showStandings(league) {
+  state.currentStandingsLeague = league;
+  document.getElementById('standings-title').textContent = league === 'superlig' ? 'Süper Lig — Puan Durumu' : 'TFF 1. Lig — Puan Durumu';
+  renderStandings();
+  showPage('standings');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+ 
