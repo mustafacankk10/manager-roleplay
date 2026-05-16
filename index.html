@@ -297,4 +297,313 @@ footer a{color:var(--gold);text-decoration:none}
           <div class="form-row"><label>Skor Dep</label><input id="m-score-a" type="number" min="0" placeholder="—"/></div>
         </div>
         <div class="form-row"><label>Hakem</label><input id="m-ref" placeholder="Hakem adı"/></div>
-        <button class="save-btn" onclick="addMatch()">Maç Ekl
+        <button class="save-btn" onclick="addMatch()">Maç Ekle</button>
+        <div class="admin-list">
+          <div class="admin-list-title">Eklenen Maçlar</div>
+          <div id="admin-match-list"></div>
+        </div>
+      </div>
+
+      <!-- PUAN DURUMU -->
+      <div class="admin-section" id="tab-puan">
+        <div class="form-row"><label>Lig</label>
+          <select id="st-league">
+            <option value="superlig">Süper Lig</option>
+            <option value="tff1">TFF 1. Lig</option>
+          </select>
+        </div>
+        <div class="form-grid">
+          <div class="form-row"><label>Takım</label><input id="st-team" placeholder="Takım adı"/></div>
+          <div class="form-row"><label>Puan</label><input id="st-pts" type="number" min="0" placeholder="0"/></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-row"><label>Oynanan</label><input id="st-p" type="number" min="0" placeholder="0"/></div>
+          <div class="form-row"><label>Galibiyet</label><input id="st-w" type="number" min="0" placeholder="0"/></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-row"><label>Beraberlik</label><input id="st-d" type="number" min="0" placeholder="0"/></div>
+          <div class="form-row"><label>Mağlubiyet</label><input id="st-l" type="number" min="0" placeholder="0"/></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-row"><label>Attığı Gol</label><input id="st-gf" type="number" min="0" placeholder="0"/></div>
+          <div class="form-row"><label>Yediği Gol</label><input id="st-ga" type="number" min="0" placeholder="0"/></div>
+        </div>
+        <button class="save-btn" onclick="addStanding()">Takım Ekle</button>
+        <div class="admin-list">
+          <div class="admin-list-title">Eklenen Takımlar</div>
+          <div id="admin-standing-list"></div>
+        </div>
+      </div>
+
+      <!-- TAKIMLAR YÖNETİMİ -->
+      <div class="admin-section" id="tab-takim">
+        <div class="form-row"><label>Lig</label>
+          <select id="at-league" onchange="renderAdminTeams()">
+            <option value="superlig">Süper Lig</option>
+            <option value="tff1">TFF 1. Lig</option>
+          </select>
+        </div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.75rem">Takım kartına tıklayarak dolu/boş durumunu değiştirin.</p>
+        <div class="team-admin-grid" id="admin-teams-grid"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  Bu site <a href="https://discord.gg/managerp" target="_blank">discord.gg/managerp</a> rol yapma (RP) topluluğu için oluşturulmuştur. Gerçek kulüplerle resmi bir bağlantısı yoktur.
+</footer>
+
+<script>
+const DEFAULT_TEAMS = {
+  superlig: [
+    { name: 'İstanbul Başakşehir', logo: '🔵', dolu: true },
+    { name: 'Galatasaray', logo: '🦁', dolu: true },
+    { name: 'Beşiktaş JK', logo: '🦅', dolu: true },
+    { name: 'Çaykur Rizespor', logo: '🟢', dolu: true },
+    { name: 'Fenerbahçe', logo: '🦅', dolu: true },
+    { name: 'Göztepe FK', logo: '🔴', dolu: true },
+    { name: 'Erzurumspor', logo: '⚽', dolu: true },
+    { name: 'Samsunspor', logo: '🔴', dolu: true },
+    { name: 'Kocaelispor', logo: '⚽', dolu: true },
+    { name: 'Trabzonspor', logo: '🌊', dolu: true },
+    { name: 'Kasımpaşa FK', logo: '⚽', dolu: true },
+    { name: 'Gaziantep FK', logo: '🟠', dolu: true },
+    { name: 'Corendon Alanyaspor', logo: '🌴', dolu: true },
+    { name: 'Konyaspor', logo: '🟢', dolu: true },
+    { name: 'Antalyaspor', logo: '🔴', dolu: true },
+    { name: 'Çorum FK', logo: '⚽', dolu: true },
+    { name: 'Kayserispor', logo: '🟡', dolu: true },
+    { name: 'Amed Sportif', logo: '🟣', dolu: true },
+  ],
+  tff1: [
+    { name: 'Bursaspor', logo: '🐊', dolu: true },
+    { name: 'Bodrumspor', logo: '⚓', dolu: true },
+    { name: 'İstanbulspor', logo: '🔵', dolu: true },
+    { name: 'Elazigspor', logo: '⚽', dolu: true },
+    { name: 'Iğdır FK', logo: '⚽', dolu: true },
+    { name: 'Gençlerbirliği', logo: '🔴', dolu: true },
+    { name: 'İkas Eyüpspor', logo: '⚽', dolu: true },
+    { name: 'Karagümrük', logo: '⚫', dolu: true },
+    { name: 'Bandırmaspor', logo: '⚽', dolu: true },
+    { name: 'Keçiörengücü', logo: '🟡', dolu: true },
+    { name: 'Manisa FK', logo: '⚽', dolu: true },
+    { name: 'Sivasspor', logo: '🟡', dolu: true },
+    { name: 'Vanspor', logo: '⚽', dolu: true },
+    { name: 'Boluspor', logo: '🔵', dolu: false },
+    { name: 'Sarıyer SK', logo: '🔴', dolu: true },
+    { name: 'Ümraniyespor', logo: '⚽', dolu: true },
+    { name: 'Batman Petrol Spor', logo: '⚽', dolu: true },
+    { name: 'Erokspor', logo: '⚽', dolu: true },
+    { name: 'Pendikspor', logo: '🔵', dolu: true },
+    { name: 'Aliağa FK', logo: '⚽', dolu: true },
+  ]
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('managerrp_state');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return { news: [], matches: [], standings: { superlig: [], tff1: [] }, teams: JSON.parse(JSON.stringify(DEFAULT_TEAMS)), currentStandingsLeague: 'superlig' };
+}
+function saveState() {
+  try { localStorage.setItem('managerrp_state', JSON.stringify(state)); } catch(e) {}
+}
+
+let state = loadState();
+if (!state.teams) state.teams = JSON.parse(JSON.stringify(DEFAULT_TEAMS));
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) { btn.classList.add('active'); } else { const nb = document.getElementById('nav-' + id); if (nb) nb.classList.add('active'); }
+  closeDropdown();
+  if (id === 'takimlar') renderTeams();
+}
+
+function toggleDropdown(e) { e.stopPropagation(); document.getElementById('pd-menu').classList.toggle('open'); }
+function closeDropdown() { document.getElementById('pd-menu').classList.remove('open'); }
+document.addEventListener('click', e => { if (!e.target.closest('.nav-dropdown')) closeDropdown(); });
+
+function showStandings(league) {
+  state.currentStandingsLeague = league;
+  document.getElementById('standings-title').textContent = league === 'superlig' ? 'Süper Lig — Puan Durumu' : 'TFF 1. Lig — Puan Durumu';
+  renderStandings();
+  showPage('standings');
+  closeDropdown();
+}
+
+function openLoginOverlay() {
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('login-overlay').classList.add('open');
+}
+function closeLoginOverlay() { document.getElementById('login-overlay').classList.remove('open'); }
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if (u === 'mustafa' && p === '1453') { closeLoginOverlay(); openAdmin(); }
+  else { document.getElementById('login-error').textContent = '❌ Kullanıcı adı veya şifre hatalı!'; }
+}
+document.getElementById('login-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeLoginOverlay(); });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('login-overlay').classList.contains('open')) doLogin(); });
+
+function openAdmin() {
+  document.getElementById('admin-overlay').classList.add('open');
+  renderAdminNewsList(); renderAdminMatchList(); renderAdminStandingList(); renderAdminTeams();
+}
+function closeAdmin() { document.getElementById('admin-overlay').classList.remove('open'); }
+document.getElementById('admin-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeAdmin(); });
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (id === 'takim') renderAdminTeams();
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function addNews() {
+  const title = document.getElementById('n-title').value.trim();
+  const cat = document.getElementById('n-cat').value.trim();
+  const body = document.getElementById('n-content').value.trim();
+  if (!title) return toast('Başlık gerekli!');
+  state.news.unshift({ id: Date.now(), title, cat: cat || 'Genel', body, date: new Date().toLocaleDateString('tr-TR') });
+  saveState(); renderNews(); renderAdminNewsList();
+  document.getElementById('n-title').value = '';
+  document.getElementById('n-cat').value = '';
+  document.getElementById('n-content').value = '';
+  toast('✓ Haber eklendi!');
+}
+function deleteNews(id) {
+  state.news = state.news.filter(n => n.id !== id);
+  saveState(); renderNews(); renderAdminNewsList(); toast('Haber silindi.');
+}
+function renderNews() {
+  const grid = document.getElementById('news-grid');
+  if (!state.news.length) { grid.innerHTML = '<div class="empty-state">Henüz haber eklenmedi.</div>'; return; }
+  grid.innerHTML = state.news.map(n => `<div class="news-card"><div class="news-cat">${escHtml(n.cat)}</div><h3>${escHtml(n.title)}</h3><p>${escHtml(n.body)}</p><div class="news-date">${escHtml(n.date)}</div></div>`).join('');
+}
+function renderAdminNewsList() {
+  const el = document.getElementById('admin-news-list');
+  if (!state.news.length) { el.innerHTML = '<div class="empty-state">Yok</div>'; return; }
+  el.innerHTML = state.news.map(n => `<div class="admin-item"><span class="admin-item-info">${escHtml(n.cat)} — ${escHtml(n.title)}</span><button class="del-btn" onclick="deleteNews(${n.id})">Sil</button></div>`).join('');
+}
+
+function addMatch() {
+  const home = document.getElementById('m-home').value.trim();
+  const away = document.getElementById('m-away').value.trim();
+  const date = document.getElementById('m-date').value;
+  const time = document.getElementById('m-time').value;
+  const league = document.getElementById('m-league').value;
+  const stadium = document.getElementById('m-stadium').value.trim();
+  const sh = document.getElementById('m-score-h').value;
+  const sa = document.getElementById('m-score-a').value;
+  const ref = document.getElementById('m-ref').value.trim();
+  if (!home || !away) return toast('Ev sahibi ve deplasman gerekli!');
+  state.matches.unshift({ id: Date.now(), home, away, date, time, league, stadium, scoreH: sh !== '' ? parseInt(sh) : null, scoreA: sa !== '' ? parseInt(sa) : null, ref });
+  saveState(); renderMatches(); renderAdminMatchList();
+  ['m-home','m-away','m-date','m-time','m-stadium','m-score-h','m-score-a','m-ref'].forEach(id => document.getElementById(id).value = '');
+  toast('✓ Maç eklendi!');
+}
+function deleteMatch(id) {
+  state.matches = state.matches.filter(m => m.id !== id);
+  saveState(); renderMatches(); renderAdminMatchList(); toast('Maç silindi.');
+}
+function matchCard(m) {
+  const scored = m.scoreH !== null && m.scoreA !== null;
+  const leagueName = m.league === 'superlig' ? 'Süper Lig' : 'TFF 1. Lig';
+  const dateStr = m.date ? new Date(m.date + 'T00:00').toLocaleDateString('tr-TR') : '—';
+  return `<div class="match-card"><div class="match-header"><span class="match-league-badge">${leagueName}</span><div class="match-date-info"><span>📅 ${dateStr}</span>${m.time ? `<span>🕐 ${m.time}</span>` : ''}${m.stadium ? `<span>🏟 ${escHtml(m.stadium)}</span>` : ''}</div></div><div class="match-body"><div><div class="team-name">${escHtml(m.home)}</div></div><div>${scored ? `<div class="score-text">${m.scoreH} — ${m.scoreA}</div>` : '<div class="vs-text">VS</div>'}</div><div><div class="team-name">${escHtml(m.away)}</div></div></div>${m.ref ? `<div class="match-footer"><span>👔 Hakem: ${escHtml(m.ref)}</span></div>` : ''}</div>`;
+}
+function renderMatches() {
+  const tff1 = state.matches.filter(m => m.league === 'tff1');
+  const sup = state.matches.filter(m => m.league === 'superlig');
+  document.getElementById('matches-tff1').innerHTML = tff1.length ? tff1.map(matchCard).join('') : '<div class="empty-state">Henüz maç eklenmedi.</div>';
+  document.getElementById('matches-superlig').innerHTML = sup.length ? sup.map(matchCard).join('') : '<div class="empty-state">Henüz maç eklenmedi.</div>';
+}
+function renderAdminMatchList() {
+  const el = document.getElementById('admin-match-list');
+  if (!state.matches.length) { el.innerHTML = '<div class="empty-state">Yok</div>'; return; }
+  el.innerHTML = state.matches.map(m => `<div class="admin-item"><span class="admin-item-info">${escHtml(m.home)} vs ${escHtml(m.away)} (${m.league === 'superlig' ? 'SL' : 'TFF1'})</span><button class="del-btn" onclick="deleteMatch(${m.id})">Sil</button></div>`).join('');
+}
+
+function addStanding() {
+  const league = document.getElementById('st-league').value;
+  const team = document.getElementById('st-team').value.trim();
+  const pts = parseInt(document.getElementById('st-pts').value) || 0;
+  const p = parseInt(document.getElementById('st-p').value) || 0;
+  const w = parseInt(document.getElementById('st-w').value) || 0;
+  const d = parseInt(document.getElementById('st-d').value) || 0;
+  const l = parseInt(document.getElementById('st-l').value) || 0;
+  const gf = parseInt(document.getElementById('st-gf').value) || 0;
+  const ga = parseInt(document.getElementById('st-ga').value) || 0;
+  if (!team) return toast('Takım adı gerekli!');
+  state.standings[league].push({ id: Date.now(), team, pts, p, w, d, l, gf, ga });
+  state.standings[league].sort((a,b) => b.pts - a.pts || (b.gf-b.ga)-(a.gf-a.ga));
+  saveState(); renderStandings(); renderAdminStandingList();
+  ['st-team','st-pts','st-p','st-w','st-d','st-l','st-gf','st-ga'].forEach(id => document.getElementById(id).value = '');
+  toast('✓ Takım eklendi!');
+}
+function deleteStanding(league, id) {
+  state.standings[league] = state.standings[league].filter(s => s.id !== id);
+  saveState(); renderStandings(); renderAdminStandingList(); toast('Takım silindi.');
+}
+function renderStandings() {
+  const tbody = document.getElementById('standings-body');
+  const rows = state.standings[state.currentStandingsLeague];
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty-state">Henüz puan durumu eklenmedi.</td></tr>'; return; }
+  tbody.innerHTML = rows.map((r,i) => `<tr${i<3?' class="highlight"':''}><td class="rank">${i+1}</td><td>${escHtml(r.team)}</td><td>${r.p}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td>${r.gf}</td><td>${r.ga}</td><td>${r.gf-r.ga}</td><td class="pts">${r.pts}</td></tr>`).join('');
+}
+function renderAdminStandingList() {
+  const el = document.getElementById('admin-standing-list');
+  const all = [...state.standings.superlig.map(s=>({...s,league:'superlig'})),...state.standings.tff1.map(s=>({...s,league:'tff1'}))];
+  if (!all.length) { el.innerHTML = '<div class="empty-state">Yok</div>'; return; }
+  el.innerHTML = all.map(s => `<div class="admin-item"><span class="admin-item-info">${escHtml(s.team)} — ${s.league==='superlig'?'SL':'TFF1'} — ${s.pts} puan</span><button class="del-btn" onclick="deleteStanding('${s.league}',${s.id})">Sil</button></div>`).join('');
+}
+
+function renderTeams() {
+  ['superlig','tff1'].forEach(lg => {
+    const el = document.getElementById('teams-' + lg);
+    const teams = state.teams[lg];
+    if (!teams || !teams.length) { el.innerHTML = '<div class="empty-state">Takım yok.</div>'; return; }
+    el.innerHTML = teams.map(t => `<div class="team-card ${t.dolu?'dolu':'bos'}"><div class="team-logo">${t.logo}</div><div class="team-card-name">${escHtml(t.name)}</div><span class="team-status-badge ${t.dolu?'dolu':'bos'}">${t.dolu?'✅ Dolu':'❌ Boş'}</span></div>`).join('');
+  });
+}
+function renderAdminTeams() {
+  const league = document.getElementById('at-league').value;
+  const el = document.getElementById('admin-teams-grid');
+  const teams = state.teams[league];
+  if (!teams || !teams.length) { el.innerHTML = '<div class="empty-state">Takım yok.</div>'; return; }
+  el.innerHTML = teams.map((t,i) => `<div class="team-admin-item" style="border-left:3px solid ${t.dolu?'#2ecc71':'#e74c3c'}"><span style="font-size:1.1rem">${t.logo}</span><span style="flex:1;font-size:0.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(t.name)}</span><button class="toggle-status-btn" onclick="toggleTeamStatus('${league}',${i})">${t.dolu?'❌ Boş Yap':'✅ Dolu Yap'}</button></div>`).join('');
+}
+function toggleTeamStatus(league, idx) {
+  state.teams[league][idx].dolu = !state.teams[league][idx].dolu;
+  saveState(); renderAdminTeams(); renderTeams();
+  toast(state.teams[league][idx].dolu ? '✓ Dolu olarak işaretlendi.' : '✓ Boş olarak işaretlendi.');
+}
+
+renderNews();
+renderMatches();
+renderStandings();
+</script>
+</body>
+        </html>
