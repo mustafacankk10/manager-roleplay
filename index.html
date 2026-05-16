@@ -58,7 +58,7 @@ nav{position:sticky;top:0;z-index:200;background:var(--red3);border-bottom:2px s
 
 /* ── MAÇ KARTI ── */
 .match-card{background:var(--bg2);border:1px solid var(--line);border-radius:4px;margin-bottom:1rem;overflow:hidden}
-.match-header{background:var(--red);padding:0.6rem 1rem;display:flex;align-items:center;gap:1rem}
+.match-header{background:var(--red);padding:0.6rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .match-league-badge{background:var(--gold);color:var(--red3);font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem}
 .match-date-info{font-size:0.8rem;color:rgba(255,255,255,0.8);display:flex;gap:1rem}
 .match-body{padding:1.5rem;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;text-align:center}
@@ -136,7 +136,7 @@ footer a{color:var(--gold);text-decoration:none}
 <div class="hero">
   <div class="hero-badge">Discord RP Topluluğu</div>
   <h1>MANAGER <span>RP</span></h1>
-  <p>Türkiye'nin En Büyük Futbol Rol Yapma Topluluğu • discord.gg/managerrp</p>
+  <p>Türkiye'nin En Büyük Futbol Rol Yapma Topluluğu • <a href="https://discord.gg/managerp" style="color:var(--gold); text-decoration:none;" target="_blank">discord.gg/managerp</a></p>
 </div>
 
 <!-- HABERLER -->
@@ -205,8 +205,12 @@ footer a{color:var(--gold);text-decoration:none}
       <!-- MAÇ -->
       <div class="admin-section" id="tab-mac">
         <div class="form-grid">
-          <div class="form-row"><label>Ev Sahibi</label><input id="m-home" placeholder="Takım adı"/></div>
-          <div class="form-row"><label>Deplasman</label><input id="m-away" placeholder="Takım adı"/></div>
+          <div class="form-row"><label>Ev Sahibi</label>
+            <select id="m-home"></select>
+          </div>
+          <div class="form-row"><label>Deplasman</label>
+            <select id="m-away"></select>
+          </div>
         </div>
         <div class="form-grid">
           <div class="form-row"><label>Tarih</label><input id="m-date" type="date"/></div>
@@ -214,7 +218,7 @@ footer a{color:var(--gold);text-decoration:none}
         </div>
         <div class="form-grid">
           <div class="form-row"><label>Lig</label>
-            <select id="m-league">
+            <select id="m-league" onchange="updateAdminMatchTeams()">
               <option value="superlig">Süper Lig</option>
               <option value="tff1">TFF 1. Lig</option>
             </select>
@@ -236,32 +240,36 @@ footer a{color:var(--gold);text-decoration:none}
       <!-- PUAN DURUMU -->
       <div class="admin-section" id="tab-puan">
         <div class="form-row"><label>Lig</label>
-          <select id="st-league">
+          <select id="st-league" onchange="updateAdminStandingTeams()">
             <option value="superlig">Süper Lig</option>
             <option value="tff1">TFF 1. Lig</option>
           </select>
         </div>
         <div class="form-grid">
-          <div class="form-row"><label>Takım</label><input id="st-team" placeholder="Takım adı"/></div>
-          <div class="form-row"><label>Puan</label><input id="st-pts" type="number" min="0" placeholder="0"/></div>
+          <div class="form-row"><label>Takım Seç</label>
+            <select id="st-team"></select>
+          </div>
+          <div class="form-row"><label>Durum (Boş / Dolu)</label>
+            <select id="st-status">
+              <option value="Dolu">Dolu ✅</option>
+              <option value="Boş">Boş ❌</option>
+            </select>
+          </div>
         </div>
         <div class="form-grid">
-          <div class="form-row"><label>Oynanan</label><input id="st-p" type="number" min="0" placeholder="0"/></div>
-          <div class="form-row"><label>Galibiyet</label><input id="st-w" type="number" min="0" placeholder="0"/></div>
+          <div class="form-row"><label>Puan</label><input id="st-pts" type="number" min="0" value="0"/></div>
+          <div class="form-row"><label>Oynanan</label><input id="st-p" type="number" min="0" value="0"/></div>
         </div>
         <div class="form-grid">
-          <div class="form-row"><label>Beraberlik</label><input id="st-d" type="number" min="0" placeholder="0"/></div>
-          <div class="form-row"><label>Mağlubiyet</label><input id="st-l" type="number" min="0" placeholder="0"/></div>
+          <div class="form-row"><label>Galibiyet</label><input id="st-w" type="number" min="0" value="0"/></div>
+          <div class="form-row"><label>Beraberlik</label><input id="st-d" type="number" min="0" value="0"/></div>
         </div>
         <div class="form-grid">
-          <div class="form-row"><label>Attığı Gol</label><input id="st-gf" type="number" min="0" placeholder="0"/></div>
-          <div class="form-row"><label>Yediği Gol</label><input id="st-ga" type="number" min="0" placeholder="0"/></div>
+          <div class="form-row"><label>Mağlubiyet</label><input id="st-l" type="number" min="0" value="0"/></div>
+          <div class="form-row"><label>Attığı Gol</label><input id="st-gf" type="number" min="0" value="0"/></div>
         </div>
-        <button class="save-btn" onclick="addStanding()">Takım Ekle</button>
-        <div class="admin-list">
-          <div class="admin-list-title">Eklenen Takımlar</div>
-          <div id="admin-standing-list"></div>
-        </div>
+        <div class="form-row"><label>Yediği Gol</label><input id="st-ga" type="number" min="0" value="0"/></div>
+        <button class="save-btn" onclick="saveStandingData()">Verileri Güncelle</button>
       </div>
 
     </div>
@@ -271,24 +279,68 @@ footer a{color:var(--gold);text-decoration:none}
 <div class="toast" id="toast"></div>
 
 <footer>
-  Bu site <a href="#">discord.gg/managerrp</a> rol yapma (RP) topluluğu için oluşturulmuştur. Gerçek kulüplerle resmi bir bağlantısı yoktur.
+  Bu site <a href="https://discord.gg/managerp" target="_blank">discord.gg/managerp</a> rol yapma (RP) topluluğu için oluşturulmuştur. Gerçek kulüplerle resmi bir bağlantısı yoktur.
 </footer>
 
 <script>
-// ── STATE ──
+// Sabit Temizlenmiş Takım Listeleri
+const TFF1_TEAMS = [
+  "Bursaspor", "Bodrumspor", "İstanbulspor", "Elazığspor", "Iğdır FK", 
+  "Gençlerbirliği", "İkas Eyüpspor", "Karagümrük", "Bandırmaspor", 
+  "Keçiörengücü", "Manisa", "Sivasspor", "Vanspor", "Boluspor", 
+  "Sarıyer SK", "Ümraniyespor", "Batman Petrol Spor", "Erokspor", "Pendikspor", "Aliağa"
+];
+
+const SUPERLIG_TEAMS = [
+  "İstanbul Başakşehir", "Galatasaray", "Beşiktaş JK", "Çaykur Rizespor", 
+  "Fenerbahçe", "Göztepe FK", "Erzurumspor", "Samsunspor", "Kocaelispor", 
+  "Trabzonspor", "Kasımpaşa FK", "Gaziantep FK", "Corendon Alanyaspor", 
+  "Konyaspor", "Antalyaspor", "Çorum FK", "Kayserispor", "Amed Sportif Faaliyetler"
+];
+
+// ── STATE & KALICI HAFIZA (LOCALSTORAGE) ──
 let state = {
-  news: [],
-  matches: [],
-  standings: { superlig: [], tff1: [] },
-  currentStandingsLeague: 'superlig'
+  news: JSON.parse(localStorage.getItem('mp_news')) || [],
+  matches: JSON.parse(localStorage.getItem('mp_matches')) || [],
+  standings: JSON.parse(localStorage.getItem('mp_standings')) || { superlig: [], tff1: [] },
+  currentStandingsLeague: 'superlig',
+  isAdminAuthenticated: false
 };
 
-// ── NAV ──
+// Eğer hafızada puan durumu yoksa başlangıç takımlarını varsayılan ayarlarla oluştur
+if (state.standings.superlig.length === 0 && state.standings.tff1.length === 0) {
+  SUPERLIG_TEAMS.forEach(team => {
+    state.standings.superlig.push({ name: team, status: "Dolu", p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 });
+  });
+  TFF1_TEAMS.forEach(team => {
+    // Sadece Boluspor varsayılan olarak boş listelendiği için kontrol koyduk
+    let status = (team === "Boluspor") ? "Boş" : "Dolu";
+    state.standings.tff1.push({ name: team, status: status, p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 });
+  });
+  saveToLocalStorage();
+}
+
+function saveToLocalStorage() {
+  localStorage.setItem('mp_news', JSON.stringify(state.news));
+  localStorage.setItem('mp_matches', JSON.stringify(state.matches));
+  localStorage.setItem('mp_standings', JSON.stringify(state.standings));
+}
+
+// ── NAV & SAYFA YÖNETİMİ ──
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
+  const targetPage = document.getElementById('page-' + id);
+  if(targetPage) targetPage.classList.add('active');
+  
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    // Manuel tetiklemelerde menüdeki butonları aktif et
+    if(id === 'haberler') document.querySelectorAll('.nav-btn')[0].classList.add('active');
+    if(id === 'tff1') document.querySelectorAll('.nav-btn')[1].classList.add('active');
+    if(id === 'superlig') document.querySelectorAll('.nav-btn')[2].classList.add('active');
+  }
   closeDropdown();
 }
 
@@ -299,73 +351,4 @@ function closeDropdown() {
   document.getElementById('pd-menu').classList.remove('open');
 }
 document.addEventListener('click', e => {
-  if (!e.target.closest('.nav-dropdown')) closeDropdown();
-});
-
-function showStandings(league) {
-  state.currentStandingsLeague = league;
-  document.getElementById('standings-title').textContent =
-    league === 'superlig' ? 'Süper Lig — Puan Durumu' : 'TFF 1. Lig — Puan Durumu';
-  renderStandings();
-  showPage('standings');
-  closeDropdown();
-}
-
-// ── ADMIN ──
-function openAdmin() { document.getElementById('admin-overlay').classList.add('open'); }
-function closeAdmin() { document.getElementById('admin-overlay').classList.remove('open'); }
-document.getElementById('admin-overlay').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeAdmin();
-});
-
-function switchTab(id, btn) {
-  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// ── TOAST ──
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ── HABER ──
-function addNews() {
-  const title = document.getElementById('n-title').value.trim();
-  const cat   = document.getElementById('n-cat').value.trim();
-  const body  = document.getElementById('n-content').value.trim();
-  if (!title) return toast('Başlık gerekli!');
-  state.news.unshift({ id: Date.now(), title, cat: cat || 'Genel', body, date: new Date().toLocaleDateString('tr-TR') });
-  renderNews();
-  renderAdminNewsList();
-  document.getElementById('n-title').value = '';
-  document.getElementById('n-cat').value = '';
-  document.getElementById('n-content').value = '';
-  toast('✓ Haber eklendi!');
-}
-
-function deleteNews(id) {
-  state.news = state.news.filter(n => n.id !== id);
-  renderNews(); renderAdminNewsList();
-}
-
-function renderNews() {
-  const grid = document.getElementById('news-grid');
-  if (!state.news.length) { grid.innerHTML = '<div class="empty-state">Henüz haber eklenmedi.</div>'; return; }
-  grid.innerHTML = state.news.map(n => `
-    <div class="news-card">
-      <div class="news-cat">${n.cat}</div>
-      <h3>${n.title}</h3>
-      <p>${n.body}</p>
-      <div class="news-date">${n.date}</div>
-    </div>`).join('');
-}
-
-function renderAdminNewsList() {
-  const el = document.getElementById('admin-news-list');
-  if (!state.news.length) { el.innerHTML = '<div class="empty-state">Yok</div>'; return; }
-  el.in
+  if (!e.
