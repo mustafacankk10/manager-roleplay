@@ -1,347 +1,173 @@
-<!DOCTYPE html>
-<html lang="tr">
+<!DOCTYPE html><html lang="tr">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>MANAGER RP — Resmi Site</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MANAGER RP</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --red:#8B0000;--red2:#6a0000;--red3:#3d0000;
-  --gold:#FFD700;--gold2:#e6b800;
-  --bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#222;
-  --text:#f0f0f0;--muted:#999;--line:#333;
-  --white:#fff;
-}
-html{scroll-behavior:smooth}
-body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-
-/* ── NAV ── */
-nav{position:sticky;top:0;z-index:200;background:var(--red3);border-bottom:2px solid var(--gold);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:60px}
-.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.1em;color:var(--gold);cursor:pointer}
-.nav-logo span{color:var(--white)}
-.nav-links{display:flex;align-items:center;gap:0.25rem}
-.nav-btn{background:none;border:none;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.5rem 1rem;cursor:pointer;transition:color 0.2s;position:relative}
-.nav-btn:hover,.nav-btn.active{color:var(--gold)}
-.nav-btn.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--gold)}
-.nav-dropdown{position:relative}
-.dropdown-menu{display:none;position:absolute;top:100%;left:0;background:var(--red2);border:1px solid var(--gold);min-width:160px;z-index:300}
-.dropdown-menu.open{display:block}
-.dropdown-item{display:block;width:100%;background:none;border:none;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.75rem 1.25rem;cursor:pointer;text-align:left;transition:background 0.15s,color 0.15s}
-.dropdown-item:hover{background:var(--gold);color:var(--red3)}
-.admin-btn{margin-left:1rem;background:var(--gold);color:var(--red3);font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border:none;padding:0.5rem 1.2rem;cursor:pointer;transition:background 0.2s}
-.admin-btn:hover{background:var(--gold2)}
-
-/* ── HERO ── */
-.hero{background:linear-gradient(135deg,var(--red3) 0%,var(--red) 50%,var(--red2) 100%);padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(0,0,0,0.03) 40px,rgba(0,0,0,0.03) 80px)}
-.hero-badge{display:inline-block;background:var(--gold);color:var(--red3);font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.3rem 1rem;margin-bottom:1.5rem}
-.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,6rem);letter-spacing:0.05em;color:var(--white);line-height:1;margin-bottom:0.5rem}
-.hero h1 span{color:var(--gold)}
-.hero p{color:rgba(255,255,255,0.7);font-size:1rem;margin-top:1rem}
-
-/* ── PAGES ── */
-.page{display:none;max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem}
-.page.active{display:block;animation:fadeIn 0.3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.page-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.08em;color:var(--gold);border-bottom:2px solid var(--gold);padding-bottom:0.5rem;margin-bottom:1.5rem}
-
-/* ── HABERLER ── */
-.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem}
-.news-card{background:var(--bg2);border:1px solid var(--line);border-top:3px solid var(--gold);padding:1.5rem;transition:border-color 0.2s,transform 0.2s}
-.news-card:hover{border-color:var(--gold);transform:translateY(-2px)}
-.news-cat{font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
-.news-card h3{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;color:var(--white)}
-.news-card p{font-size:0.85rem;color:var(--muted);line-height:1.6}
-.news-date{font-size:0.75rem;color:var(--muted);margin-top:1rem}
-
-/* ── MAÇ KARTI ── */
-.match-card{background:var(--bg2);border:1px solid var(--line);border-radius:4px;margin-bottom:1rem;overflow:hidden}
-.match-header{background:var(--red);padding:0.6rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.match-league-badge{background:var(--gold);color:var(--red3);font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem}
-.match-date-info{font-size:0.8rem;color:rgba(255,255,255,0.8);display:flex;gap:1rem}
-.match-body{padding:1.5rem;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;text-align:center}
-.team-name{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-top:0.5rem}
-.vs-text{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--line)}
-.score-text{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--gold)}
-.match-footer{padding:0.6rem 1rem;border-top:1px solid var(--line);display:flex;gap:1.5rem;font-size:0.78rem;color:var(--muted)}
-
-/* ── PUAN DURUMU ── */
-.table-wrap{overflow-x:auto}
-.standings-table{width:100%;border-collapse:collapse;font-size:0.9rem}
-.standings-table th{background:var(--red);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.7rem 1rem;text-align:left}
-.standings-table td{padding:0.65rem 1rem;border-bottom:1px solid var(--line)}
-.standings-table tr:hover td{background:var(--bg3)}
-.standings-table .rank{font-weight:700;color:var(--gold)}
-.standings-table .pts{font-weight:700;color:var(--white)}
-
-/* ── ADMIN ── */
-#admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;overflow-y:auto}
-#admin-overlay.open{display:flex;flex-direction:column}
-.admin-panel{background:var(--bg2);max-width:860px;margin:2rem auto;border:2px solid var(--gold);width:100%}
-.admin-top{background:var(--red3);border-bottom:2px solid var(--gold);display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem}
-.admin-top h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.08em;color:var(--gold)}
-.close-btn{background:none;border:1px solid var(--muted);color:var(--muted);font-size:1.2rem;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,color 0.2s}
-.close-btn:hover{border-color:var(--gold);color:var(--gold)}
-.admin-tabs{display:flex;border-bottom:1px solid var(--line)}
-.admin-tab{background:none;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.75rem 1.5rem;cursor:pointer;border-bottom:2px solid transparent;transition:color 0.2s}
-.admin-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.admin-body{padding:1.5rem}
-.admin-section{display:none}
-.admin-section.active{display:block}
-.form-row{margin-bottom:1rem}
-.form-row label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
-.form-row input,.form-row select,.form-row textarea{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--text);font-family:'Barlow',sans-serif;font-size:0.9rem;padding:0.6rem 0.8rem;outline:none;transition:border-color 0.2s}
-.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--gold)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.save-btn{background:var(--gold);color:var(--red3);font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border:none;padding:0.75rem 2rem;cursor:pointer;transition:background 0.2s;margin-top:0.5rem}
-.save-btn:hover{background:var(--gold2)}
-.admin-list{margin-top:1.5rem;border-top:1px solid var(--line);padding-top:1rem}
-.admin-list-title{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem}
-.admin-item{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.75rem;border:1px solid var(--line);margin-bottom:0.4rem;font-size:0.85rem}
-.del-btn{background:none;border:1px solid #555;color:#999;font-size:0.75rem;padding:0.2rem 0.5rem;cursor:pointer;transition:border-color 0.2s,color 0.2s}
-.del-btn:hover{border-color:#c00;color:#c00}
-.toast{position:fixed;bottom:2rem;right:2rem;background:var(--gold);color:var(--red3);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.08em;padding:0.75rem 1.5rem;z-index:999;opacity:0;transform:translateY(10px);transition:opacity 0.3s,transform 0.3s;pointer-events:none}
-.toast.show{opacity:1;transform:translateY(0)}
-.empty-state{text-align:center;color:var(--muted);padding:3rem 1rem;font-size:0.9rem}
-
-footer{background:var(--red3);border-top:2px solid var(--gold);text-align:center;padding:1.5rem;font-size:0.8rem;color:var(--muted);margin-top:4rem}
-footer a{color:var(--gold);text-decoration:none}
+body{margin:0;font-family:Arial;background:#111;color:#fff}
+nav{background:#5a0000;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid gold}
+.logo{font-size:28px;font-weight:700;color:gold}
+button{cursor:pointer}
+.nav-btn,.admin-btn{background:none;border:none;color:#fff;margin-left:10px;font-size:15px}
+.admin-btn{background:gold;color:#111;padding:8px 14px;border-radius:6px;font-weight:700}
+.page{padding:20px;max-width:1100px;margin:auto}
+.section-title{font-size:28px;color:gold;margin-bottom:20px}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.team-card{background:#1c1c1c;border:1px solid #333;padding:14px;border-left:4px solid gold;border-radius:8px;display:flex;justify-content:space-between;align-items:center}
+.team-name{font-weight:700}
+.status{font-size:20px}
+.status.full{color:#00d26a}
+.status.empty{color:#ff4444}
+#loginModal,#adminPanel{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:999}
+.box{background:#1b1b1b;padding:24px;border:2px solid gold;width:90%;max-width:420px;border-radius:10px}
+input,select{width:100%;padding:10px;margin:8px 0;background:#222;border:1px solid #444;color:#fff}
+.save-btn{background:gold;color:#111;border:none;padding:10px 16px;font-weight:700;width:100%;margin-top:10px}
+.close{float:right;background:none;border:none;color:#fff;font-size:20px}
 </style>
 </head>
-<body>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo" onclick="showPage('haberler')">MANAGER <span>RP</span></div>
-  <div class="nav-links">
-    <button class="nav-btn active" id="btn-nav-haberler" onclick="showPage('haberler')">Haberler</button>
-    <button class="nav-btn" id="btn-nav-tff1" onclick="showPage('tff1')">TFF 1. Lig</button>
-    <button class="nav-btn" id="btn-nav-superlig" onclick="showPage('superlig')">Süper Lig</button>
-    <div class="nav-dropdown">
-      <button class="nav-btn" onclick="toggleDropdown()" id="pd-btn">Puan Durumu ▾</button>
-      <div class="dropdown-menu" id="pd-menu">
-        <button class="dropdown-item" onclick="showStandings('superlig')">Süper Lig</button>
-        <button class="dropdown-item" onclick="showStandings('tff1')">TFF 1. Lig</button>
-      </div>
-    </div>
-    <button class="admin-btn" onclick="openAdmin()">⚙ Admin</button>
-  </div>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-badge">Discord RP Topluluğu</div>
-  <h1>MANAGER <span>RP</span></h1>
-  <p>Türkiye'nin En Büyük Futbol Rol Yapma Topluluğu • <a href="https://discord.gg/managerp" style="color:var(--gold); text-decoration:none;" target="_blank">discord.gg/managerp</a></p>
+<body><nav>
+<div class="logo">MANAGER RP</div>
+<div>
+<button class="nav-btn" onclick="showLeague('superlig')">Süper Lig</button>
+<button class="nav-btn" onclick="showLeague('tff1')">TFF 1. Lig</button>
+<button class="admin-btn" onclick="openLogin()">Admin</button>
 </div>
-
-<!-- HABERLER -->
-<div class="page active" id="page-haberler">
-  <p class="page-title">Haberler</p>
-  <div class="news-grid" id="news-grid">
-    <div class="empty-state">Henüz haber eklenmedi.</div>
-  </div>
+</nav><div class="page">
+<h1 class="section-title" id="leagueTitle">Süper Lig</h1>
+<div class="team-grid" id="teamGrid"></div>
+</div><div id="loginModal">
+<div class="box">
+<button class="close" onclick="closeLogin()">×</button>
+<h2>Admin Giriş</h2>
+<input id="username" placeholder="Kullanıcı adı" />
+<input id="password" type="password" placeholder="Şifre" />
+<button class="save-btn" onclick="login()">Giriş Yap</button>
 </div>
-
-<!-- TFF 1 -->
-<div class="page" id="page-tff1">
-  <p class="page-title">TFF 1. Lig — Maçlar</p>
-  <div id="matches-tff1"><div class="empty-state">Henüz maç eklenmedi.</div></div>
+</div><div id="adminPanel">
+<div class="box">
+<button class="close" onclick="closeAdmin()">×</button>
+<h2>Takım Durumu Güncelle</h2>
+<select id="adminLeague">
+<option value="superlig">Süper Lig</option>
+<option value="tff1">TFF 1. Lig</option>
+</select>
+<select id="adminTeam"></select>
+<select id="adminStatus">
+<option value="true">Dolu</option>
+<option value="false">Boş</option>
+</select>
+<button class="save-btn" onclick="updateTeamStatus()">Kaydet</button>
 </div>
-
-<!-- SÜPER LİG -->
-<div class="page" id="page-superlig">
-  <p class="page-title">Süper Lig — Maçlar</p>
-  <div id="matches-superlig"><div class="empty-state">Henüz maç eklenmedi.</div></div>
-</div>
-
-<!-- PUAN DURUMU -->
-<div class="page" id="page-standings">
-  <p class="page-title" id="standings-title">Puan Durumu</p>
-  <div class="table-wrap">
-    <table class="standings-table">
-      <thead>
-        <tr>
-          <th>#</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>A</th><th>Y</th><th>AV</th><th>P</th>
-        </tr>
-      </thead>
-      <tbody id="standings-body">
-        <tr><td colspan="10" class="empty-state">Henüz puan durumu eklenmedi.</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ADMIN OVERLAY -->
-<div id="admin-overlay">
-  <div class="admin-panel">
-    <div class="admin-top">
-      <h2>⚙ Admin Paneli</h2>
-      <button class="close-btn" onclick="closeAdmin()">✕</button>
-    </div>
-    <div class="admin-tabs">
-      <button class="admin-tab active" id="btn-tab-haber" onclick="switchTab('haber')">Haber Ekle</button>
-      <button class="admin-tab" id="btn-tab-mac" onclick="switchTab('mac')">Maç Ekle</button>
-      <button class="admin-tab" id="btn-tab-puan" onclick="switchTab('puan')">Puan Durumu</button>
-    </div>
-    <div class="admin-body">
-
-      <!-- HABER TAB -->
-      <div class="admin-section active" id="tab-haber">
-        <div class="form-row"><label>Başlık</label><input id="n-title" placeholder="Haber başlığı"/></div>
-        <div class="form-row"><label>Kategori</label><input id="n-cat" placeholder="Örn: Transfer, Maç Özeti"/></div>
-        <div class="form-row"><label>İçerik</label><textarea id="n-content" rows="4" placeholder="Haber içeriği..."></textarea></div>
-        <button class="save-btn" onclick="addNews()">Haberi Ekle</button>
-        <div class="admin-list">
-          <div class="admin-list-title">Eklenen Haberler</div>
-          <div id="admin-news-list"></div>
-        </div>
-      </div>
-
-      <!-- MAÇ TAB -->
-      <div class="admin-section" id="tab-mac">
-        <div class="form-grid">
-          <div class="form-row"><label>Lig</label>
-            <select id="m-league" onchange="updateAdminMatchTeams()">
-              <option value="superlig">Süper Lig</option>
-              <option value="tff1">TFF 1. Lig</option>
-            </select>
-          </div>
-          <div class="form-row"><label>Stat</label><input id="m-stadium" placeholder="Stat adı"/></div>
-        </div>
-        <div class="form-grid">
-          <div class="form-row"><label>Ev Sahibi</label><select id="m-home"></select></div>
-          <div class="form-row"><label>Deplasman</label><select id="m-away"></select></div>
-        </div>
-        <div class="form-grid">
-          <div class="form-row"><label>Tarih</label><input id="m-date" type="date"/></div>
-          <div class="form-row"><label>Saat</label><input id="m-time" type="time"/></div>
-        </div>
-        <div class="form-grid">
-          <div class="form-row"><label>Skor Ev (boş=oynanmadı)</label><input id="m-score-h" type="number" min="0" placeholder="—"/></div>
-          <div class="form-row"><label>Skor Dep</label><input id="m-score-a" type="number" min="0" placeholder="—"/></div>
-        </div>
-        <div class="form-row"><label>Hakem</label><input id="m-ref" placeholder="Hakem adı"/></div>
-        <button class="save-btn" onclick="addMatch()">Maç Ekle</button>
-        <div class="admin-list">
-          <div class="admin-list-title">Eklenen Maçlar</div>
-          <div id="admin-match-list"></div>
-        </div>
-      </div>
-
-      <!-- PUAN DURUMU TAB -->
-      <div class="admin-section" id="tab-puan">
-        <div class="form-row"><label>Lig</label>
-          <select id="st-league" onchange="updateAdminStandingTeams()">
-            <option value="superlig">Süper Lig</option>
-            <option value="tff1">TFF 1. Lig</option>
-          </select>
-        </div>
-        <div class="form-grid">
-          <div class="form-row"><label>Takım Seç</label><select id="st-team" onchange="loadStandingFormValues()"></select></div>
-          <div class="form-row"><label>Durum (Boş / Dolu)</label>
-            <select id="st-status">
-              <option value="Dolu">Dolu ✅</option>
-              <option value="Boş">Boş ❌</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-row"><label>Oynanan (O)</label><input id="st-p" type="number" min="0" value="0"/></div>
-          <div class="form-row"><label>Puan (P)</label><input id="st-pts" type="number" min="0" value="0"/></div>
-        </div>
-        <div class="form-grid">
-          <div class="form-row"><label>Galibiyet (G)</label><input id="st-w" type="number" min="0" value="0"/></div>
-          <div class="form-row"><label>Beraberlik (B)</label><input id="st-d" type="number" min="0" value="0"/></div>
-        </div>
-        <div class="form-grid">
-          <div class="form-row"><label>Mağlubiyet (M)</label><input id="st-l" type="number" min="0" value="0"/></div>
-          <div class="form-row"><label>Attığı Gol (A)</label><input id="st-gf" type="number" min="0" value="0"/></div>
-        </div>
-        <div class="form-row"><label>Yediği Gol (Y)</label><input id="st-ga" type="number" min="0" value="0"/></div>
-        <button class="save-btn" onclick="saveStandingData()">Verileri Güncelle</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<footer>
-  Bu site <a href="https://discord.gg/managerp" target="_blank">discord.gg/managerp</a> rol yapma (RP) topluluğu için oluşturulmuştur.
-</footer>
-
-<script>
-const TFF1_TEAMS = ["Bursaspor", "Bodrumspor", "İstanbulspor", "Elazığspor", "Iğdır FK", "Gençlerbirliği", "İkas Eyüpspor", "Karagümrük", "Bandırmaspor", "Keçiörengücü", "Manisa", "Sivasspor", "Vanspor", "Boluspor", "Sarıyer SK", "Ümraniyespor", "Batman Petrol Spor", "Erokspor", "Pendikspor", "Aliağa"];
-const SUPERLIG_TEAMS = ["İstanbul Başakşehir", "Galatasaray", "Beşiktaş JK", "Çaykur Rizespor", "Fenerbahçe", "Göztepe FK", "Erzurumspor", "Samsunspor", "Kocaelispor", "Trabzonspor", "Kasımpaşa FK", "Gaziantep FK", "Corendon Alanyaspor", "Konyaspor", "Antalyaspor", "Çorum FK", "Kayserispor", "Amed Sportif Faaliyetler"];
-
-// LocalStorage Hatalarını Önlemek İçin Güvenli Başlatma
-let savedNews = [];
-let savedMatches = [];
-let savedStandings = { superlig: [], tff1: [] };
-
-try {
-  savedNews = JSON.parse(localStorage.getItem('mp_news')) || [];
-  savedMatches = JSON.parse(localStorage.getItem('mp_matches')) || [];
-  savedStandings = JSON.parse(localStorage.getItem('mp_standings')) || { superlig: [], tff1: [] };
-} catch(e) {
-  console.log("Hafıza okuma hatası pas geçildi.");
-}
-
-let state = {
-  news: savedNews,
-  matches: savedMatches,
-  standings: savedStandings,
-  currentStandingsLeague: 'superlig',
-  isAdminAuthenticated: false
+</div><script>
+const defaultData = {
+  superlig:[
+    {name:'İstanbul Başakşehir',full:true},
+    {name:'Galatasaray',full:true},
+    {name:'Beşiktaş JK',full:true},
+    {name:'Çaykur Rizespor',full:true},
+    {name:'Fenerbahçe',full:true},
+    {name:'Göztepe FK',full:true},
+    {name:'Erzurumspor',full:true},
+    {name:'Samsunspor',full:true},
+    {name:'Kocaelispor',full:true},
+    {name:'Trabzonspor',full:true},
+    {name:'Kasımpaşa FK',full:true},
+    {name:'Gaziantep FK',full:true},
+    {name:'Corendon Alanyaspor',full:true},
+    {name:'Konyaspor',full:true},
+    {name:'Antalyaspor',full:true},
+    {name:'Çorum FK',full:true},
+    {name:'Kayserispor',full:true},
+    {name:'Amed Sportif Faaliyetler',full:true}
+  ],
+  tff1:[
+    {name:'Bursaspor',full:true},
+    {name:'Bodrumspor',full:true},
+    {name:'İstanbulspor',full:true},
+    {name:'Elazığspor',full:true},
+    {name:'Iğdır FK',full:true},
+    {name:'Gençlerbirliği',full:true},
+    {name:'İkas Eyüpspor',full:true},
+    {name:'Karagümrük',full:true},
+    {name:'Bandırmaspor',full:true},
+    {name:'Keçiörengücü',full:true},
+    {name:'Manisa',full:true},
+    {name:'Sivasspor',full:true},
+    {name:'Vanspor',full:true},
+    {name:'Boluspor',full:false},
+    {name:'Sarıyer SK',full:true},
+    {name:'Ümraniyespor',full:true},
+    {name:'Batman Petrol Spor',full:true},
+    {name:'Erokspor',full:true},
+    {name:'Pendikspor',full:true},
+    {name:'Aliağa',full:true}
+  ]
 };
 
-// Takımları Varsayılan Tabloya Ekle
-if (state.standings.superlig.length === 0 && state.standings.tff1.length === 0) {
-  SUPERLIG_TEAMS.forEach(t => state.standings.superlig.push({ name: t, status: "Dolu", p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 }));
-  TFF1_TEAMS.forEach(t => {
-    let status = (t === "Boluspor") ? "Boş" : "Dolu";
-    state.standings.tff1.push({ name: t, status: status, p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 });
+let state = JSON.parse(localStorage.getItem('manager_rp_data')) || defaultData;
+let currentLeague = 'superlig';
+
+function save(){
+  localStorage.setItem('manager_rp_data', JSON.stringify(state));
+}
+
+function showLeague(league){
+  currentLeague = league;
+  document.getElementById('leagueTitle').textContent = league === 'superlig' ? 'Süper Lig' : 'TFF 1. Lig';
+  renderTeams();
+}
+
+function renderTeams(){
+  const grid = document.getElementById('teamGrid');
+  grid.innerHTML = '';
+  state[currentLeague].forEach(team=>{
+    grid.innerHTML += `
+      <div class="team-card">
+        <div class="team-name">${team.name}</div>
+        <div class="status ${team.full ? 'full':'empty'}">${team.full ? '✅' : '❌'}</div>
+      </div>`;
   });
-  saveToLocalStorage();
+  fillAdminTeams();
 }
 
-function saveToLocalStorage() {
-  try {
-    localStorage.setItem('mp_news', JSON.stringify(state.news));
-    localStorage.setItem('mp_matches', JSON.stringify(state.matches));
-    localStorage.setItem('mp_standings', JSON.stringify(state.standings));
-  } catch(e) {
-    console.log("Hafızaya kaydedilemedi.");
+function openLogin(){ document.getElementById('loginModal').style.display='flex'; }
+function closeLogin(){ document.getElementById('loginModal').style.display='none'; }
+function closeAdmin(){ document.getElementById('adminPanel').style.display='none'; }
+
+function login(){
+  const u = document.getElementById('username').value;
+  const p = document.getElementById('password').value;
+  if(u === 'mustafa' && p === '1453'){
+    closeLogin();
+    document.getElementById('adminPanel').style.display='flex';
+    fillAdminTeams();
+  } else {
+    alert('Hatalı giriş');
   }
 }
 
-// ── SAYFA GEÇİŞLERİ (GÜVENLİ HALE GETİRİLDİ) ──
-function showPage(id) {
-  // Tüm sayfaları gizle
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  
-  // Hedef sayfayı aç
-  const targetPage = document.getElementById('page-' + id);
-  if(targetPage) targetPage.classList.add('active');
-  
-  // Navigasyon butonlarının renklerini güncelle
-  document.querySelectorAll('.nav-links .nav-btn').forEach(b => b.classList.remove('active'));
-  
-  const activeBtn = document.getElementById('btn-nav-' + id);
-  if(activeBtn) {
-    activeBtn.classList.add('active');
-  } else if (id === 'standings') {
-    document.getElementById('pd-btn').classList.add('active');
-  }
-  closeDropdown();
+function fillAdminTeams(){
+  const league = document.getElementById('adminLeague')?.value || currentLeague;
+  const select = document.getElementById('adminTeam');
+  if(!select) return;
+  select.innerHTML = '';
+  state[league].forEach((t,i)=>{
+    select.innerHTML += `<option value="${i}">${t.name}</option>`;
+  });
 }
 
-function toggleDropdown() { document.getElementById('pd-menu').classList.toggle('open'); }
-function closeDropdown() { document.getElementById('pd-menu').classList.remove('open'); }
+document.getElementById('adminLeague').addEventListener('change', fillAdminTeams);
 
-// Dışarı tıklayınca dropdown kapansın
-document.addEventListener('cl
+function updateTeamStatus(){
+  const league = document.getElementById('adminLeague').value;
+  const index = document.getElementById('adminTeam').value;
+  const status = document.getElementById('adminStatus').value === 'true';
+  state[league][index].full = status;
+  save();
+  if(currentLeague === league) renderTeams();
+  alert('Kaydedildi');
+}
+
+renderTeams();
+</script></body>
+</html>
