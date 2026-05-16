@@ -116,9 +116,9 @@ footer a{color:var(--gold);text-decoration:none}
 <nav>
   <div class="nav-logo" onclick="showPage('haberler')">MANAGER <span>RP</span></div>
   <div class="nav-links">
-    <button class="nav-btn active" onclick="showPage('haberler',this)">Haberler</button>
-    <button class="nav-btn" onclick="showPage('tff1',this)">TFF 1. Lig</button>
-    <button class="nav-btn" onclick="showPage('superlig',this)">Süper Lig</button>
+    <button class="nav-btn active" id="btn-nav-haberler" onclick="showPage('haberler')">Haberler</button>
+    <button class="nav-btn" id="btn-nav-tff1" onclick="showPage('tff1')">TFF 1. Lig</button>
+    <button class="nav-btn" id="btn-nav-superlig" onclick="showPage('superlig')">Süper Lig</button>
     <div class="nav-dropdown">
       <button class="nav-btn" onclick="toggleDropdown()" id="pd-btn">Puan Durumu ▾</button>
       <div class="dropdown-menu" id="pd-menu">
@@ -182,9 +182,9 @@ footer a{color:var(--gold);text-decoration:none}
       <button class="close-btn" onclick="closeAdmin()">✕</button>
     </div>
     <div class="admin-tabs">
-      <button class="admin-tab active" onclick="switchTab('haber',this)">Haber Ekle</button>
-      <button class="admin-tab" onclick="switchTab('mac',this)">Maç Ekle</button>
-      <button class="admin-tab" onclick="switchTab('puan',this)">Puan Durumu</button>
+      <button class="admin-tab active" id="btn-tab-haber" onclick="switchTab('haber')">Haber Ekle</button>
+      <button class="admin-tab" id="btn-tab-mac" onclick="switchTab('mac')">Maç Ekle</button>
+      <button class="admin-tab" id="btn-tab-puan" onclick="switchTab('puan')">Puan Durumu</button>
     </div>
     <div class="admin-body">
 
@@ -275,20 +275,31 @@ footer a{color:var(--gold);text-decoration:none}
 </footer>
 
 <script>
-// Sabit Takım Listeleri
 const TFF1_TEAMS = ["Bursaspor", "Bodrumspor", "İstanbulspor", "Elazığspor", "Iğdır FK", "Gençlerbirliği", "İkas Eyüpspor", "Karagümrük", "Bandırmaspor", "Keçiörengücü", "Manisa", "Sivasspor", "Vanspor", "Boluspor", "Sarıyer SK", "Ümraniyespor", "Batman Petrol Spor", "Erokspor", "Pendikspor", "Aliağa"];
 const SUPERLIG_TEAMS = ["İstanbul Başakşehir", "Galatasaray", "Beşiktaş JK", "Çaykur Rizespor", "Fenerbahçe", "Göztepe FK", "Erzurumspor", "Samsunspor", "Kocaelispor", "Trabzonspor", "Kasımpaşa FK", "Gaziantep FK", "Corendon Alanyaspor", "Konyaspor", "Antalyaspor", "Çorum FK", "Kayserispor", "Amed Sportif Faaliyetler"];
 
-// STATE & VERİTABANI BAĞLANTISI
+// LocalStorage Hatalarını Önlemek İçin Güvenli Başlatma
+let savedNews = [];
+let savedMatches = [];
+let savedStandings = { superlig: [], tff1: [] };
+
+try {
+  savedNews = JSON.parse(localStorage.getItem('mp_news')) || [];
+  savedMatches = JSON.parse(localStorage.getItem('mp_matches')) || [];
+  savedStandings = JSON.parse(localStorage.getItem('mp_standings')) || { superlig: [], tff1: [] };
+} catch(e) {
+  console.log("Hafıza okuma hatası pas geçildi.");
+}
+
 let state = {
-  news: JSON.parse(localStorage.getItem('mp_news')) || [],
-  matches: JSON.parse(localStorage.getItem('mp_matches')) || [],
-  standings: JSON.parse(localStorage.getItem('mp_standings')) || { superlig: [], tff1: [] },
+  news: savedNews,
+  matches: savedMatches,
+  standings: savedStandings,
   currentStandingsLeague: 'superlig',
-  isAdminAuthenticated: JSON.parse(sessionStorage.getItem('mp_admin_auth')) || false
+  isAdminAuthenticated: false
 };
 
-// Varsayılan Tabloyu Doldurma
+// Takımları Varsayılan Tabloya Ekle
 if (state.standings.superlig.length === 0 && state.standings.tff1.length === 0) {
   SUPERLIG_TEAMS.forEach(t => state.standings.superlig.push({ name: t, status: "Dolu", p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 }));
   TFF1_TEAMS.forEach(t => {
@@ -299,36 +310,38 @@ if (state.standings.superlig.length === 0 && state.standings.tff1.length === 0) 
 }
 
 function saveToLocalStorage() {
-  localStorage.setItem('mp_news', JSON.stringify(state.news));
-  localStorage.setItem('mp_matches', JSON.stringify(state.matches));
-  localStorage.setItem('mp_standings', JSON.stringify(state.standings));
+  try {
+    localStorage.setItem('mp_news', JSON.stringify(state.news));
+    localStorage.setItem('mp_matches', JSON.stringify(state.matches));
+    localStorage.setItem('mp_standings', JSON.stringify(state.standings));
+  } catch(e) {
+    console.log("Hafızaya kaydedilemedi.");
+  }
 }
 
-// SAYFA GEÇİŞLERİ VE MENÜ BUTONLARI
-function showPage(id, btn) {
+// ── SAYFA GEÇİŞLERİ (GÜVENLİ HALE GETİRİLDİ) ──
+function showPage(id) {
+  // Tüm sayfaları gizle
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  
+  // Hedef sayfayı aç
   const targetPage = document.getElementById('page-' + id);
   if(targetPage) targetPage.classList.add('active');
   
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  if (btn) {
-    btn.classList.add('active');
-  } else {
-    if(id === 'haberler') document.querySelectorAll('.nav-btn')[0].classList.add('active');
-    if(id === 'tff1') document.querySelectorAll('.nav-btn')[1].classList.add('active');
-    if(id === 'superlig') document.querySelectorAll('.nav-btn')[2].classList.add('active');
+  // Navigasyon butonlarının renklerini güncelle
+  document.querySelectorAll('.nav-links .nav-btn').forEach(b => b.classList.remove('active'));
+  
+  const activeBtn = document.getElementById('btn-nav-' + id);
+  if(activeBtn) {
+    activeBtn.classList.add('active');
+  } else if (id === 'standings') {
+    document.getElementById('pd-btn').classList.add('active');
   }
   closeDropdown();
 }
 
 function toggleDropdown() { document.getElementById('pd-menu').classList.toggle('open'); }
 function closeDropdown() { document.getElementById('pd-menu').classList.remove('open'); }
-document.addEventListener('click', e => { if (!e.target.closest('.nav-dropdown')) closeDropdown(); });
 
-function showStandings(league) {
-  state.currentStandingsLeague = league;
-  document.getElementById('standings-title').textContent = league === 'superlig' ? 'Süper Lig — Puan Durumu' : 'TFF 1. Lig — Puan Durumu';
-  renderStandings();
-  showPage('standings');
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
- 
+// Dışarı tıklayınca dropdown kapansın
+document.addEventListener('cl
